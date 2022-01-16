@@ -1,7 +1,9 @@
 #include <WiFi.h>
 #include "esp_camera.h"
+#include "driver/mcpwm.h"
 #include "soc/soc.h"          // disable brownout problems
 #include "soc/rtc_cntl_reg.h" // disable brownout problems
+
 
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x) // Convert preprocessor macro to string
@@ -31,6 +33,11 @@ const char *wifi_pass = TOSTRING(WIFI_PASS);
 #define FLASH_LED_PWM_FREQUENCY 50000                               // 50kHz frequency
 #define FLASH_LED_PWM_RESOLUTION 10                                 // 10bit resolution
 #define FLASH_LED_PWM_MAX_VALUE (1 << FLASH_LED_PWM_RESOLUTION) - 1 // maximum value provided to ledcWrite()
+
+#define MOTOR_0A 12 // Left motor A
+#define MOTOR_0B 13 // Left motor B
+#define MOTOR_1A 15 // Right motor A
+#define MOTOR_1B 14 // Right motor B
 
 void startWebServer();
 
@@ -138,6 +145,23 @@ void setup()
     ledcSetup(FLASH_LED_PWM_CHANNEL, FLASH_LED_PWM_FREQUENCY, FLASH_LED_PWM_RESOLUTION); // configure LED PWM channel
     set_flash_led_brightness(0);                                                         // set default value
     ledcAttachPin(FLASH_LED_PIN, FLASH_LED_PWM_CHANNEL);                                 // attach the GPIO pin to the channel
+
+    // Motor pin init
+    mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM0A, MOTOR_0A);
+    mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM0B, MOTOR_0B);
+
+    mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM1A, MOTOR_1A);
+    mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM1B, MOTOR_1B);
+
+    mcpwm_config_t pwm_config = {
+        .frequency = 1000,
+        .cmpr_a = 0.0,
+        .cmpr_b = 0.0,
+        .duty_mode = MCPWM_DUTY_MODE_0,
+        .counter_mode = MCPWM_UP_COUNTER};
+
+    mcpwm_init(MCPWM_UNIT_0, MCPWM_TIMER_0, &pwm_config);
+    mcpwm_init(MCPWM_UNIT_0, MCPWM_TIMER_1, &pwm_config);
 
     WiFi.begin(wifi_ssid, TOSTRING(WIFI_PASS));
 

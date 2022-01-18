@@ -4,7 +4,6 @@
 #include "soc/soc.h"          // disable brownout problems
 #include "soc/rtc_cntl_reg.h" // disable brownout problems
 
-
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x) // Convert preprocessor macro to string
 
@@ -34,10 +33,15 @@ const char *wifi_pass = TOSTRING(WIFI_PASS);
 #define FLASH_LED_PWM_RESOLUTION 10                                 // 10bit resolution
 #define FLASH_LED_PWM_MAX_VALUE (1 << FLASH_LED_PWM_RESOLUTION) - 1 // maximum value provided to ledcWrite()
 
-#define MOTOR_0A 12 // Left motor A
-#define MOTOR_0B 13 // Left motor B
-#define MOTOR_1A 15 // Right motor A
-#define MOTOR_1B 14 // Right motor B
+#define MOTOR_0A 13 // Left motor A
+#define MOTOR_0B 15 // Left motor B
+#define MOTOR_1A 14 // Right motor A
+#define MOTOR_1B 2  // Right motor B
+
+#define MOTOR_TEST 0
+
+#define SERVO_VERTICAL_PIN 2
+#define SERVO_HORIZONTAL_PIN 16
 
 void startWebServer();
 
@@ -162,6 +166,46 @@ void setup()
 
     mcpwm_init(MCPWM_UNIT_0, MCPWM_TIMER_0, &pwm_config);
     mcpwm_init(MCPWM_UNIT_0, MCPWM_TIMER_1, &pwm_config);
+
+#if (MOTOR_TEST == 1)
+    Serial.println("left forward");
+    mcpwm_set_signal_high(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A);
+    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B);
+
+    delay(3000);
+
+    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A);
+
+    delay(3000);
+
+    Serial.println("left backward");
+    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A);
+    mcpwm_set_signal_high(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B);
+
+    delay(3000);
+
+    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B);
+
+    delay(3000);
+
+    Serial.println("right forward");
+    mcpwm_set_signal_high(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_A);
+    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_B);
+
+    delay(3000);
+
+    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_A);
+
+    delay(3000);
+
+    Serial.println("right backward");
+    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_A);
+    mcpwm_set_signal_high(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_B);
+
+    delay(3000);
+
+    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_B);
+#endif
 
     WiFi.begin(wifi_ssid, TOSTRING(WIFI_PASS));
 

@@ -186,7 +186,7 @@ static esp_err_t cmd_handler(httpd_req_t *req)
                 }
                 else if (r > 0)
                 {
-                    mcpwm_set_duty(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_A, constrain(abs(l), 0, 100));
+                    mcpwm_set_duty(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_A, constrain(abs(r), 0, 100));
                     mcpwm_set_duty_type(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_A, MCPWM_DUTY_MODE_0);
 
                     mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_B);
@@ -195,7 +195,7 @@ static esp_err_t cmd_handler(httpd_req_t *req)
                 {
                     mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_A);
 
-                    mcpwm_set_duty(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_B, constrain(abs(l), 0, 100));
+                    mcpwm_set_duty(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_B, constrain(abs(r), 0, 100));
                     mcpwm_set_duty_type(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_B, MCPWM_DUTY_MODE_0);
                 }                
 

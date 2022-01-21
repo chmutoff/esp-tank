@@ -41,8 +41,12 @@ const char *wifi_pass = TOSTRING(WIFI_PASS);
 
 #define MOTOR_TEST 0
 
-#define SERVO_VERTICAL_PIN 2
-#define SERVO_HORIZONTAL_PIN 16
+#define SERVO_PIN 12
+#define SERVO_MIN_PULSEWIDTH_US (1000) // Minimum pulse width in microsecond
+#define SERVO_MAX_PULSEWIDTH_US (2000) // Maximum pulse width in microsecond
+#define SERVO_MAX_DEGREE (90)          // Maximum angle in degree upto which servo can rotate
+
+#define SERVO_TEST 0
 
 void startWebServer();
 
@@ -235,6 +239,17 @@ void setup()
     mcpwm_init(MCPWM_UNIT_0, MCPWM_TIMER_0, &pwm_config);
     mcpwm_init(MCPWM_UNIT_0, MCPWM_TIMER_1, &pwm_config);
 
+    // Servo init
+    mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM2A, SERVO_PIN); // To drive a RC servo, one MCPWM generator is enough
+
+    mcpwm_config_t pwm_config_servo = {
+        .frequency = 50, // frequency = 50Hz, i.e. for every servo motor time period should be 20ms
+        .cmpr_a = 0,     // duty cycle of PWMxA = 0
+        .cmpr_b = 0,     // duty cycle of PWMxB = 0
+        .duty_mode = MCPWM_DUTY_MODE_0,
+        .counter_mode = MCPWM_UP_COUNTER};
+    mcpwm_init(MCPWM_UNIT_0, MCPWM_TIMER_2, &pwm_config_servo);
+
 #if (MOTOR_TEST == 1)
     Serial.println("left forward");
     mcpwm_set_signal_high(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A);
@@ -296,7 +311,23 @@ void setup()
     InitOTA();
 }
 
+static inline uint32_t convert_servo_angle_to_duty_us(int angle)
+{
+    return (angle + SERVO_MAX_DEGREE) * (SERVO_MAX_PULSEWIDTH_US - SERVO_MIN_PULSEWIDTH_US) / (2 * SERVO_MAX_DEGREE) + SERVO_MIN_PULSEWIDTH_US;
+}
+
 void loop()
 {
     ArduinoOTA.handle();
+
+#if (SERVO_TEST == 1)
+    for (int pos = -90; pos <= 90; pos += 90)
+    {
+        Serial.printf("Angle: %d\n", pos);
+        mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_2, MCPWM_OPR_A, (float)convert_servo_angle_to_duty_us(pos));
+        mcpwm_set_duty_type(MCPWM_UNIT_0, MCPWM_TIMER_2, MCPWM_OPR_A, MCPWM_DUTY_MODE_0);
+        delay(500);
+    }
+    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_2, MCPWM_OPR_A);
+#endif
 }

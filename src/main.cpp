@@ -41,10 +41,10 @@ const char *wifi_pass = TOSTRING(WIFI_PASS);
 
 #define MOTOR_TEST 0
 
-#define SERVO_PIN 12
+#define SERVO_PIN 12 // or 3
 #define SERVO_MIN_PULSEWIDTH_US (1000) // Minimum pulse width in microsecond
 #define SERVO_MAX_PULSEWIDTH_US (2000) // Maximum pulse width in microsecond
-#define SERVO_MAX_DEGREE (90)          // Maximum angle in degree upto which servo can rotate
+#define SERVO_MAX_DEGREE (180)         // Maximum angle in degree upto which servo can rotate
 
 #define SERVO_TEST 0
 
@@ -313,7 +313,7 @@ void setup()
 
 static inline uint32_t convert_servo_angle_to_duty_us(int angle)
 {
-    return (angle + SERVO_MAX_DEGREE) * (SERVO_MAX_PULSEWIDTH_US - SERVO_MIN_PULSEWIDTH_US) / (2 * SERVO_MAX_DEGREE) + SERVO_MIN_PULSEWIDTH_US;
+    return angle * ((SERVO_MAX_PULSEWIDTH_US - SERVO_MIN_PULSEWIDTH_US) / SERVO_MAX_DEGREE) + SERVO_MIN_PULSEWIDTH_US;
 }
 
 void loop()
@@ -321,13 +321,22 @@ void loop()
     ArduinoOTA.handle();
 
 #if (SERVO_TEST == 1)
-    for (int pos = -90; pos <= 90; pos += 90)
+    for (int pos = 0; pos <= 180; pos += 10)
     {
-        Serial.printf("Angle: %d\n", pos);
+        //Serial.printf("Angle: %d\n", pos);
+        ArduinoOTA.handle();
         mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_2, MCPWM_OPR_A, (float)convert_servo_angle_to_duty_us(pos));
         mcpwm_set_duty_type(MCPWM_UNIT_0, MCPWM_TIMER_2, MCPWM_OPR_A, MCPWM_DUTY_MODE_0);
-        delay(500);
+        delay(100);
     }
-    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_2, MCPWM_OPR_A);
+
+    for (int pos = 180; pos >= 0; pos -= 10)
+    {
+        //Serial.printf("Angle: %d\n", pos);
+        ArduinoOTA.handle();
+        mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_2, MCPWM_OPR_A, (float)convert_servo_angle_to_duty_us(pos));
+        mcpwm_set_duty_type(MCPWM_UNIT_0, MCPWM_TIMER_2, MCPWM_OPR_A, MCPWM_DUTY_MODE_0);
+        delay(100);
+    }
 #endif
 }

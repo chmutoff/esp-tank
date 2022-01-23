@@ -311,7 +311,7 @@ void setup()
     InitOTA();
 }
 
-static inline uint32_t convert_servo_angle_to_duty_us(int angle)
+uint32_t convert_servo_angle_to_duty_us(int angle)
 {
     return angle * ((SERVO_MAX_PULSEWIDTH_US - SERVO_MIN_PULSEWIDTH_US) / SERVO_MAX_DEGREE) + SERVO_MIN_PULSEWIDTH_US;
 }

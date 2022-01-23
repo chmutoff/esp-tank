@@ -16,6 +16,7 @@ httpd_handle_t stream_httpd = NULL;
 httpd_handle_t camera_httpd = NULL;
 
 extern void set_flash_led_brightness(int val);
+extern uint32_t convert_servo_angle_to_duty_us(int angle);
 
 /**
  * @brief Renders the main HTML page
@@ -199,8 +200,8 @@ static esp_err_t cmd_handler(httpd_req_t *req)
                     mcpwm_set_duty_type(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_B, MCPWM_DUTY_MODE_0);
                 }                
 
-                Serial.printf("Received x: %d, y: %d\n", x, y);
-                Serial.printf("PWM0: %d, PWM1: %d\n", l, r);
+                //Serial.printf("Received x: %d, y: %d\n", x, y);
+                //Serial.printf("PWM0: %d, PWM1: %d\n", l, r);
             }
             else
             {
@@ -259,6 +260,8 @@ static esp_err_t aux_handler(httpd_req_t *req)
             {
                 int hor = atoi(val_buf);
                 Serial.printf("Servo horizontal: %d\n", hor);
+                mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_2, MCPWM_OPR_A, (float)convert_servo_angle_to_duty_us(hor));
+                mcpwm_set_duty_type(MCPWM_UNIT_0, MCPWM_TIMER_2, MCPWM_OPR_A, MCPWM_DUTY_MODE_0);
             }
             else if (httpd_query_key_value(buf, "y", val_buf, sizeof(val_buf)) == ESP_OK)
             {

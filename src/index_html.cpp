@@ -51,9 +51,9 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
         <div id="slidercontainer">
             <input class="slider" type="range" min="0" max="100" value="0"
                 onchange="try{fetch(document.location.origin+'/aux?led='+this.value);}catch(e){}">
-            <input class="slider" type="range" min="0" max="100" value="50"
+            <input class="slider" type="range" min="0" max="180" value="90"
                 onchange="try{fetch(document.location.origin+'/aux?x='+this.value);}catch(e){}">
-            <input class="slider" type="range" min="0" max="100" value="50"
+            <input class="slider" type="range" min="0" max="180" value="90"
                 onchange="try{fetch(document.location.origin+'/aux?y='+this.value);}catch(e){}">
         </div>
     </div>

@@ -29,6 +29,8 @@ const char *wifi_pass = "MyWifiNetworkName";
 const char *wifi_pass = TOSTRING(WIFI_PASS);
 #endif
 
+#define HOST_NAME "esp-tank"
+
 #define FLASH_LED_PIN 4
 #define FLASH_LED_LEDC_CHANNEL LEDC_CHANNEL_7 // free ledc PWM channel
 
@@ -122,7 +124,7 @@ void init_ota()
     ArduinoOTA.setPort(3232);
 
     // Hostname defaults to esp3232-[MAC]
-    ArduinoOTA.setHostname("esp-tank");
+    ArduinoOTA.setHostname(HOST_NAME);
 
     // No authentication by default
     //ArduinoOTA.setPassword("admin");

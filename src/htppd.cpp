@@ -2,6 +2,7 @@
 #include "esp_camera.h"
 #include "esp_http_server.h"
 #include "esp_timer.h"
+#include "flash_led.h"
 #include "driver/mcpwm.h"
 
 #include "index_html.cpp"
@@ -15,7 +16,6 @@ static const char *_STREAM_PART = "Content-Type: image/jpeg\r\nContent-Length: %
 httpd_handle_t stream_httpd = NULL;
 httpd_handle_t camera_httpd = NULL;
 
-extern void set_flash_led_brightness(int val);
 extern uint32_t convert_servo_angle_to_duty_us(int angle);
 
 /**
@@ -254,7 +254,7 @@ static esp_err_t aux_handler(httpd_req_t *req)
             {
                 int led = atoi(val_buf);
                 Serial.printf("Received led: %d\n", led);
-                set_flash_led_brightness(led);
+                flash_led_set_brightness(led);
             }
             else if (httpd_query_key_value(buf, "x", val_buf, sizeof(val_buf)) == ESP_OK)
             {

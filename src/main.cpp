@@ -1,6 +1,7 @@
 #include <ArduinoOTA.h>
 #include <WiFi.h>
 #include "esp_camera.h"
+#include "flash_led.h"
 #include "driver/mcpwm.h"
 #include "soc/soc.h"          // disable brownout problems
 #include "soc/rtc_cntl_reg.h" // disable brownout problems
@@ -29,10 +30,7 @@ const char *wifi_pass = TOSTRING(WIFI_PASS);
 #endif
 
 #define FLASH_LED_PIN 4
-#define FLASH_LED_PWM_CHANNEL 7                                     // free PWM channel (some channels used by camera)
-#define FLASH_LED_PWM_FREQUENCY 50000                               // 50kHz frequency
-#define FLASH_LED_PWM_RESOLUTION 10                                 // 10bit resolution
-#define FLASH_LED_PWM_MAX_VALUE (1 << FLASH_LED_PWM_RESOLUTION) - 1 // maximum value provided to ledcWrite()
+#define FLASH_LED_LEDC_CHANNEL LEDC_CHANNEL_7 // free ledc PWM channel
 
 #define MOTOR_0A 13 // Left motor A
 #define MOTOR_0B 15 // Left motor B
@@ -117,35 +115,6 @@ void InitOTA()
     Serial.println("OTA initialized");
 }
 
-/**
- * @brief Set the brightness of flash led
- * 
- * @param[in] val brightness percentage value from 0(OFF) to 100(MAX)
- */
-void set_flash_led_brightness(int val)
-{
-    if (val == 0)
-    {
-        ledcWrite(FLASH_LED_PWM_CHANNEL, 0);
-        Serial.println("Flash led OFF");
-    }
-    else if (val == 100)
-    {
-        ledcWrite(FLASH_LED_PWM_CHANNEL, FLASH_LED_PWM_MAX_VALUE);
-        Serial.println("Flash led 100%");
-    }
-    else if (val > 0 && val < 100)
-    {
-        int brightness = round((pow(2, (1 + (val * 0.02))) - 2) / 6 * FLASH_LED_PWM_MAX_VALUE);
-        ledcWrite(FLASH_LED_PWM_CHANNEL, brightness);
-        Serial.printf("Flash led %d%%, pwm %d\n", val, brightness);
-    }
-    else
-    {
-        Serial.printf("Flash led received wrong brightnes value: %d\n", val);
-    }
-}
-
 void setup()
 {
     WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
@@ -218,9 +187,11 @@ void setup()
 #endif
 
     // Flash LED init
-    ledcSetup(FLASH_LED_PWM_CHANNEL, FLASH_LED_PWM_FREQUENCY, FLASH_LED_PWM_RESOLUTION); // configure LED PWM channel
-    set_flash_led_brightness(0);                                                         // set default value
-    ledcAttachPin(FLASH_LED_PIN, FLASH_LED_PWM_CHANNEL);                                 // attach the GPIO pin to the channel
+    flash_led_config_t flash_led_config{
+        .pin = FLASH_LED_PIN,
+        .ledc_chan = FLASH_LED_LEDC_CHANNEL};
+
+    flash_led_init(&flash_led_config);
 
     // Motor pin init
     mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM0A, MOTOR_0A);

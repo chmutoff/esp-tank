@@ -2,6 +2,7 @@
 #include <WiFi.h>
 #include "esp_camera.h"
 #include "flash_led.h"
+#include "mc_servo.h"
 #include "driver/mcpwm.h"
 #include "soc/soc.h"          // disable brownout problems
 #include "soc/rtc_cntl_reg.h" // disable brownout problems
@@ -41,10 +42,17 @@ const char *wifi_pass = TOSTRING(WIFI_PASS);
 
 #define MOTOR_TEST 0
 
-#define SERVO_PIN 12                   // or 3
-#define SERVO_MIN_PULSEWIDTH_US (1000) // Minimum pulse width in microsecond
-#define SERVO_MAX_PULSEWIDTH_US (2000) // Maximum pulse width in microsecond
-#define SERVO_MAX_DEGREE (180)         // Maximum angle in degree upto which servo can rotate
+#define SERVO_H_PIN 12                   // Pin of the vertical servo
+#define SERVO_H_MIN_PULSEWIDTH_US (1000) // Minimum pulse width in microsecond
+#define SERVO_H_MAX_PULSEWIDTH_US (2000) // Maximum pulse width in microsecond
+#define SERVO_H_MAX_DEGREE (180)         // Maximum angle in degree upto which servo can rotate
+mc_servo_dev_t servo_h;
+
+#define SERVO_V_PIN 3                    // Pin of the horizontal servo
+#define SERVO_V_MIN_PULSEWIDTH_US (1000) // Minimum pulse width in microsecond
+#define SERVO_V_MAX_PULSEWIDTH_US (2000) // Maximum pulse width in microsecond
+#define SERVO_V_MAX_DEGREE (180)         // Maximum angle in degree upto which servo can rotate
+mc_servo_dev_t servo_v;
 
 #define SERVO_TEST 0
 
@@ -217,15 +225,30 @@ void setup()
     mcpwm_init(MCPWM_UNIT_0, MCPWM_TIMER_1, &pwm_config);
 
     // Servo init
-    mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM2A, SERVO_PIN); // To drive a RC servo, one MCPWM generator is enough
+    mc_servo_config_t servo_h_config = {
+        .pin = SERVO_H_PIN,
+        .min_pulse_duration = SERVO_H_MIN_PULSEWIDTH_US,
+        .max_pulse_duration = SERVO_H_MAX_PULSEWIDTH_US,
+        .max_angle = SERVO_H_MAX_DEGREE,
+        .mcpwm_unit_num = MCPWM_UNIT_0,
+        .mcpwm_io_signal = MCPWM2A,
+        .mcpwm_timer_num = MCPWM_TIMER_2,
+        .mcpwm_op_num = MCPWM_OPR_A};
 
-    mcpwm_config_t pwm_config_servo = {
-        .frequency = 50, // frequency = 50Hz, i.e. for every servo motor time period should be 20ms
-        .cmpr_a = 0,     // duty cycle of PWMxA = 0
-        .cmpr_b = 0,     // duty cycle of PWMxB = 0
-        .duty_mode = MCPWM_DUTY_MODE_0,
-        .counter_mode = MCPWM_UP_COUNTER};
-    mcpwm_init(MCPWM_UNIT_0, MCPWM_TIMER_2, &pwm_config_servo);
+    mc_servo_config_t servo_v_config = {
+        .pin = SERVO_V_PIN,
+        .min_pulse_duration = SERVO_V_MIN_PULSEWIDTH_US,
+        .max_pulse_duration = SERVO_V_MAX_PULSEWIDTH_US,
+        .max_angle = SERVO_V_MAX_DEGREE,
+        .mcpwm_unit_num = MCPWM_UNIT_0,
+        .mcpwm_io_signal = MCPWM2B,
+        .mcpwm_timer_num = MCPWM_TIMER_2,
+        .mcpwm_op_num = MCPWM_OPR_B};
+
+    mc_servo_init(&servo_h, &servo_h_config);
+    mc_servo_init(&servo_v, &servo_v_config);
+    mc_servo_set_angle(&servo_h, 90);
+    mc_servo_set_angle(&servo_v, 90);
 
 #if (MOTOR_TEST == 1)
     Serial.println("left forward");
@@ -288,11 +311,6 @@ void setup()
     init_ota();
 }
 
-uint32_t convert_servo_angle_to_duty_us(int angle)
-{
-    return angle * ((SERVO_MAX_PULSEWIDTH_US - SERVO_MIN_PULSEWIDTH_US) / SERVO_MAX_DEGREE) + SERVO_MIN_PULSEWIDTH_US;
-}
-
 void loop()
 {
     ArduinoOTA.handle();
@@ -302,8 +320,8 @@ void loop()
     {
         //Serial.printf("Angle: %d\n", pos);
         ArduinoOTA.handle();
-        mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_2, MCPWM_OPR_A, (float)convert_servo_angle_to_duty_us(pos));
-        mcpwm_set_duty_type(MCPWM_UNIT_0, MCPWM_TIMER_2, MCPWM_OPR_A, MCPWM_DUTY_MODE_0);
+        mc_servo_set_angle(&servo_h, pos);
+        mc_servo_set_angle(&servo_v, pos);
         delay(100);
     }
 
@@ -311,8 +329,8 @@ void loop()
     {
         //Serial.printf("Angle: %d\n", pos);
         ArduinoOTA.handle();
-        mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_2, MCPWM_OPR_A, (float)convert_servo_angle_to_duty_us(pos));
-        mcpwm_set_duty_type(MCPWM_UNIT_0, MCPWM_TIMER_2, MCPWM_OPR_A, MCPWM_DUTY_MODE_0);
+        mc_servo_set_angle(&servo_h, pos);
+        mc_servo_set_angle(&servo_v, pos);
         delay(100);
     }
 #endif

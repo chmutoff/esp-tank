@@ -3,6 +3,7 @@
 #include "esp_http_server.h"
 #include "esp_timer.h"
 #include "flash_led.h"
+#include "mc_servo.h"
 #include "driver/mcpwm.h"
 
 #include "index_html.cpp"
@@ -16,7 +17,8 @@ static const char *_STREAM_PART = "Content-Type: image/jpeg\r\nContent-Length: %
 httpd_handle_t stream_httpd = NULL;
 httpd_handle_t camera_httpd = NULL;
 
-extern uint32_t convert_servo_angle_to_duty_us(int angle);
+extern mc_servo_dev_t servo_h;
+extern mc_servo_dev_t servo_v;
 
 /**
  * @brief Renders the main HTML page
@@ -258,15 +260,15 @@ static esp_err_t aux_handler(httpd_req_t *req)
             }
             else if (httpd_query_key_value(buf, "x", val_buf, sizeof(val_buf)) == ESP_OK)
             {
-                int hor = atoi(val_buf);
-                Serial.printf("Servo horizontal: %d\n", hor);
-                mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_2, MCPWM_OPR_A, (float)convert_servo_angle_to_duty_us(hor));
-                mcpwm_set_duty_type(MCPWM_UNIT_0, MCPWM_TIMER_2, MCPWM_OPR_A, MCPWM_DUTY_MODE_0);
+                int angle_h = atoi(val_buf);
+                Serial.printf("Servo horizontal: %d\n", angle_h);
+                mc_servo_set_angle(&servo_h, angle_h);                
             }
             else if (httpd_query_key_value(buf, "y", val_buf, sizeof(val_buf)) == ESP_OK)
             {
-                int ver = atoi(val_buf);
-                Serial.printf("Servo vertical: %d\n", ver);
+                int angle_v = atoi(val_buf);
+                Serial.printf("Servo vertical: %d\n", angle_v);
+                mc_servo_set_angle(&servo_v, angle_v);
             }
             else
             {

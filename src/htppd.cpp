@@ -3,8 +3,8 @@
 #include "esp_http_server.h"
 #include "esp_timer.h"
 #include "flash_led.h"
+#include "mc_motor.h"
 #include "mc_servo.h"
-#include "driver/mcpwm.h"
 
 #include "index_html.cpp"
 #include "joystick_js.cpp"
@@ -19,6 +19,9 @@ httpd_handle_t camera_httpd = NULL;
 
 extern mc_servo_dev_t servo_h;
 extern mc_servo_dev_t servo_v;
+
+extern mc_motor_dev_t motor_l;
+extern mc_motor_dev_t motor_r;
 
 /**
  * @brief Renders the main HTML page
@@ -159,48 +162,9 @@ static esp_err_t cmd_handler(httpd_req_t *req)
             {
                 int x = atoi(r_x);
                 int y = atoi(r_y);
-                int l = y + x;
-                int r = y - x;
 
-                if (l == 0) // stop
-                {
-                    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A);
-                    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B);
-                }
-                else if (l > 0)
-                {
-                    mcpwm_set_duty(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, constrain(abs(l), 0, 100));
-                    mcpwm_set_duty_type(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, MCPWM_DUTY_MODE_0);
-
-                    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B);
-                }
-                else
-                {
-                    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A);
-
-                    mcpwm_set_duty(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, constrain(abs(l), 0, 100));
-                    mcpwm_set_duty_type(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, MCPWM_DUTY_MODE_0);
-                }
-
-                if (r == 0) // stop
-                {
-                    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_A);
-                    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_B);
-                }
-                else if (r > 0)
-                {
-                    mcpwm_set_duty(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_A, constrain(abs(r), 0, 100));
-                    mcpwm_set_duty_type(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_A, MCPWM_DUTY_MODE_0);
-
-                    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_B);
-                }
-                else
-                {
-                    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_A);
-
-                    mcpwm_set_duty(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_B, constrain(abs(r), 0, 100));
-                    mcpwm_set_duty_type(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_B, MCPWM_DUTY_MODE_0);
-                }                
+                mc_motor_set_speed(&motor_l, y + x);
+                mc_motor_set_speed(&motor_r, y - x);
 
                 //Serial.printf("Received x: %d, y: %d\n", x, y);
                 //Serial.printf("PWM0: %d, PWM1: %d\n", l, r);

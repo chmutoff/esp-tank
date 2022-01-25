@@ -2,8 +2,8 @@
 #include <WiFi.h>
 #include "esp_camera.h"
 #include "flash_led.h"
+#include "mc_motor.h"
 #include "mc_servo.h"
-#include "driver/mcpwm.h"
 #include "soc/soc.h"          // disable brownout problems
 #include "soc/rtc_cntl_reg.h" // disable brownout problems
 
@@ -35,10 +35,13 @@ const char *wifi_pass = TOSTRING(WIFI_PASS);
 #define FLASH_LED_PIN 4
 #define FLASH_LED_LEDC_CHANNEL LEDC_CHANNEL_7 // free ledc PWM channel
 
-#define MOTOR_0A 13 // Left motor A
-#define MOTOR_0B 15 // Left motor B
-#define MOTOR_1A 14 // Right motor A
-#define MOTOR_1B 2  // Right motor B
+#define MOTOR_L_PIN_A 13 // Left motor A
+#define MOTOR_L_PIN_B 15 // Left motor B
+mc_motor_dev_t motor_l;
+
+#define MOTOR_R_PIN_A 14 // Right motor A
+#define MOTOR_R_PIN_B 2  // Right motor B
+mc_motor_dev_t motor_r;
 
 #define MOTOR_TEST 0
 
@@ -208,21 +211,32 @@ void setup()
     flash_led_init(&flash_led_config);
 
     // Motor pin init
-    mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM0A, MOTOR_0A);
-    mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM0B, MOTOR_0B);
+    mc_motor_config_t motor_l_config = {
+        .pin_a = MOTOR_L_PIN_A,
+        .pin_b = MOTOR_L_PIN_B,
+        .frequency = 500,
+        .min_duty = 0,
+        .mcpwm_unit_num = MCPWM_UNIT_0,
+        .mcpwm_io_signal_a = MCPWM0A,
+        .mcpwm_io_signal_b = MCPWM0B,
+        .mcpwm_timer_num = MCPWM_TIMER_0,
+        .mcpwm_op_a = MCPWM_OPR_A,
+        .mcpwm_op_b = MCPWM_OPR_B};
 
-    mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM1A, MOTOR_1A);
-    mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM1B, MOTOR_1B);
+    mc_motor_config_t motor_r_config = {
+        .pin_a = MOTOR_R_PIN_A,
+        .pin_b = MOTOR_R_PIN_B,
+        .frequency = 500,
+        .min_duty = 0,
+        .mcpwm_unit_num = MCPWM_UNIT_0,
+        .mcpwm_io_signal_a = MCPWM1A,
+        .mcpwm_io_signal_b = MCPWM1B,
+        .mcpwm_timer_num = MCPWM_TIMER_1,
+        .mcpwm_op_a = MCPWM_OPR_A,
+        .mcpwm_op_b = MCPWM_OPR_B};
 
-    mcpwm_config_t pwm_config = {
-        .frequency = 1000,
-        .cmpr_a = 0.0,
-        .cmpr_b = 0.0,
-        .duty_mode = MCPWM_DUTY_MODE_0,
-        .counter_mode = MCPWM_UP_COUNTER};
-
-    mcpwm_init(MCPWM_UNIT_0, MCPWM_TIMER_0, &pwm_config);
-    mcpwm_init(MCPWM_UNIT_0, MCPWM_TIMER_1, &pwm_config);
+    mc_motor_init(&motor_l, &motor_l_config);
+    mc_motor_init(&motor_r, &motor_r_config);
 
     // Servo init
     mc_servo_config_t servo_h_config = {
@@ -251,43 +265,73 @@ void setup()
     mc_servo_set_angle(&servo_v, 90);
 
 #if (MOTOR_TEST == 1)
+
+    /*
     Serial.println("left forward");
-    mcpwm_set_signal_high(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A);
-    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B);
+    for (int i = 0; i <= 100; ++i)
+    {
+        Serial.printf("speed %d\n", i);
+        mc_motor_set_speed(&motor_l, i);
+        delay(100);
+    }
+    delay(5000);
 
-    delay(3000);
-
-    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A);
+    mc_motor_set_speed(&motor_l, 0);
 
     delay(3000);
 
     Serial.println("left backward");
-    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A);
-    mcpwm_set_signal_high(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B);
+    for (int i = 0; i >= -100; --i)
+    {
+        Serial.printf("speed %d\n", i);
+        mc_motor_set_speed(&motor_l, i);
+        delay(100);
+    }
 
-    delay(3000);
+    delay(5000);
 
-    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B);
+    mc_motor_set_speed(&motor_l, 0);
 
     delay(3000);
 
     Serial.println("right forward");
-    mcpwm_set_signal_high(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_A);
-    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_B);
+    for (int i = 0; i <= 100; ++i)
+    {
+        Serial.printf("speed %d\n", i);
+        mc_motor_set_speed(&motor_r, i);
+        delay(100);
+    }
+    delay(5000);
 
-    delay(3000);
-
-    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_A);
+    mc_motor_set_speed(&motor_r, 0);
 
     delay(3000);
 
     Serial.println("right backward");
-    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_A);
-    mcpwm_set_signal_high(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_B);
+    for (int i = 0; i >= -100; --i)
+    {
+        Serial.printf("speed %d\n", i);
+        mc_motor_set_speed(&motor_r, i);
+        delay(100);
+    }
 
+    delay(5000);
+
+    mc_motor_set_speed(&motor_r, 0);
     delay(3000);
+*/
+    Serial.println("both forward");
+    for (int i = 0; i <= 100; ++i)
+    {
+        Serial.printf("speed %d\n", i);
+        mc_motor_set_speed(&motor_l, i);
+        mc_motor_set_speed(&motor_r, i);
+        delay(100);
+    }
 
-    mcpwm_set_signal_low(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_OPR_B);
+    delay(7000);
+    mc_motor_set_speed(&motor_l, 0);
+    mc_motor_set_speed(&motor_r, 0);
 #endif
 
     WiFi.begin(wifi_ssid, TOSTRING(WIFI_PASS));

@@ -1,21 +1,21 @@
 ### Battery selection
 - 12V battery. Usually come with a spare charger.
 - 18650 in series. Output: 3.7V
-- 3x 18650 in paralell. Output 11.1V
+- 3x 18650 in paralell. Output 11.1V. Needs special charging/balancing circuit. Not recommended.
 
-### 18650 Protection and charging options
-When using 18650 batteries make sure to connect a BMS circuit and a charging circuit.
-TP4056 (without integrated BMS!)
-1S-3876 5A BMS
-18650 battery holder
+When using 18650 batteries in series make sure to connect a BMS circuit and a charging circuit. Following parts are required for a safe 18650 assembly.
+- Charger: TP4056 (1A) or IP2312 (3A)
+- BMS: 1S-3876 (5A)
+- 18650 battery holder
 
+**NOTE:** in case of TP405 choose the version without integrated BMS or it will constantly turn off the power due to high starting current of the motors!
 
-#### Step up converters
+#### Step up converters (boosters)
 
 | Model    | Current        | In Voltage   | Out Voltage   | Notes             
 |---       |---             |---           |---            |---                        |
-| SX1308   |                |              |               |
-| MT3608   |                |              |               |
+| SX1308   | 2A             | 2 - 24V      | 2 - 28V       | Small and powerful
+| MT3608   | 2A             | 2 - 24V      | 5 - 28V       |
 
 #### Step down converters
 
@@ -25,18 +25,15 @@ TP4056 (without integrated BMS!)
 | MP2315   | 1.5-2A         | 4.5 - 24V    | 0.8 - 22V     | Tiny and powerful module  |
 | LM2596   | 3A             | 4.5 - 40V    | 1.23 - 37V    | Overpowered. Big size.    |
 
-
-#### 
-
 ### Motor drivers
 
-| Model  | Current        | Voltage   | Notes                                                              |
-|---     |---             |---        | ---                                                                |
-| L298N  | 1A Max: 2A     | 4-50V     | Big voltage drop, high temperature, low performance. Easy to find. |
-| TA6586 | 5A Max: 7A     | 3-14V     | Good specs. Hard do find                                           |
-| MX1508 | 1.5A Max: 2.5A | 2-9.6V    | Max voltage is 10V! Use step down DC converter if needed.          |
-| L9110S | 0.8A Max: 1.5A | 2.5-12V   | Be careful! Sometimes they suddenly burn out!                      |
-| TB6612 | 1.2A Max: 3A   | 4.5-13.5V | Make sure to connect STBY, PWMA, PWMB to VCC pin.                  |
+| Model  | Current        | Voltage     | Notes                                               |
+|---     |---             |---          | ---                                                 |
+| L298N  | 1A Max: 2A     | 4 - 50V     | Big voltage drop, high temperature, low efficiency. |
+| TA6586 | 5A Max: 7A     | 3 - 14V     | Good specs. Hard do find                            |
+| MX1508 | 1.5A Max: 2.5A | 2 - 9.6V    | Max voltage is 10V!                                 |
+| L9110S | 0.8A Max: 1.5A | 2.5 - 12V   | Sometimes they suddenly burn out!                   |
+| TB6612 | 1.2A Max: 3A   | 4.5 - 13.5V | Connect STBY, PWMA, PWMB to VCC pin.                |
 
 ### Servo motors
 The two types of servos are: 

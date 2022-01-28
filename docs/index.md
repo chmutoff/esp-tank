@@ -1,3 +1,18 @@
+### Motor drivers
+
+| Model  | Current        | Voltage   | Notes                                                              |
+|---     |---             |---        | ---                                                                |
+| L298N  | 1A Max: 2A     | 4-50V     | Big voltage drop, high temperature, low performance. Easy to find. |
+| TA6586 | 5A Max: 7A     | 3-14V     | Good specs. Hard do find                                           |
+| MX1508 | 1.5A Max: 2.5A | 2-9.6V    | Max voltage is 10V! Use step down DC converter if needed.          |
+| L9110S | 0.8A Max: 1.5A | 2.5-12V   | Be careful! Sometimes they suddenly burn out!                      |
+| TB6612 | 1.2A Max: 3A   | 4.5-13.5V | Make sure to connect STBY, PWMA, PWMB to VCC pin.                  |
+
+### Step up converters
+
+### Step down converters
+
+
 ## Welcome to GitHub Pages
 
 You can use the [editor on GitHub](https://github.com/chmutoff/esp-tank/edit/master/docs/index.md) to maintain and preview the content for your website in Markdown files.

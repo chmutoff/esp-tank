@@ -1,5 +1,11 @@
 ## Building an ESP controlled chassis
 
+### 1. Chassis selection
+- Mini TP100 chassis (W: 15cm, H: 6cm, L: 20cm)
+![img](img/tp100-tank-chassis.png)
+- Acrylic car kit (W: 15cm, H: 6cm, L: 25cm)
+![img](img/car-chassis.png)
+
 ### 1. Battery selection
 - 12V battery. Usually come with a spare charger.
 - 18650 in series. Output: 3.7V

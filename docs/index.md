@@ -43,7 +43,7 @@ The two types of servos are:
 - SG90: micro servo motor with plastic gears
 - MG90: micro servo motor with metal gears
 
-Both servos need a 5V power supply. To attach a servo use standard servo pan/tilt mount with this 3D printed [clip](https://www.thingiverse.com/thing:4934734)
+Both servos need a 5V power supply. To attach a servo use standard servo pan/tilt mount with this [3D printed clip](https://www.thingiverse.com/thing:4934734)
 
 ### Main board
 At the moment, the only tested board is [ESP32-CAM by AiThinker](http://www.ai-thinker.com/pro_view-24.html)

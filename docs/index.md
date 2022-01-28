@@ -1,3 +1,33 @@
+### Battery selection
+- 12V battery. Usually come with a spare charger.
+- 18650 in series. Output: 3.7V
+- 3x 18650 in paralell. Output 11.1V
+
+### 18650 Protection and charging options
+When using 18650 batteries make sure to connect a BMS circuit and a charging circuit.
+TP4056 (without integrated BMS!)
+1S-3876 5A BMS
+18650 battery holder
+
+
+#### Step up converters
+
+| Model    | Current        | In Voltage   | Out Voltage   | Notes             
+|---       |---             |---           |---            |---                        |
+| SX1308   |                |              |               |
+| MT3608   |                |              |               |
+
+#### Step down converters
+
+| Model    | Current        | In Voltage   | Out Voltage   | Notes                     |
+|---       |---             |---           |---            |---                        |
+| MP1584EN | 3A             | 4.5 - 28V    | 0.8 - 20V     | Small and powerful        |
+| MP2315   | 1.5-2A         | 4.5 - 24V    | 0.8 - 22V     | Tiny and powerful module  |
+| LM2596   | 3A             | 4.5 - 40V    | 1.23 - 37V    | Overpowered. Big size.    |
+
+
+#### 
+
 ### Motor drivers
 
 | Model  | Current        | Voltage   | Notes                                                              |
@@ -8,10 +38,15 @@
 | L9110S | 0.8A Max: 1.5A | 2.5-12V   | Be careful! Sometimes they suddenly burn out!                      |
 | TB6612 | 1.2A Max: 3A   | 4.5-13.5V | Make sure to connect STBY, PWMA, PWMB to VCC pin.                  |
 
-### Step up converters
+### Servo motors
+The two types of servos are: 
+- SG90: micro servo motor with plastic gears
+- MG90: micro servo motor with metal gears
 
-### Step down converters
+Both servos need a 5V power supply. To attach a servo use standard servo pan/tilt mount with the [Clip](https://www.thingiverse.com/thing:4934734)
 
+### Main board
+At the moment, the only tested board is [ESP32-CAM by AiThinker](http://www.ai-thinker.com/pro_view-24.html)
 
 ## Welcome to GitHub Pages
 

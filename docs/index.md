@@ -7,6 +7,7 @@ When using 18650 batteries in series make sure to connect a BMS circuit and a ch
 - Charger: TP4056 (1A) or IP2312 (3A)
 - BMS: 1S-3876 (5A)
 - 18650 battery holder
+- Switch to power on/off the whole system
 
 **NOTE:** in case of TP405 choose the version without integrated BMS or it will constantly turn off the power due to high starting current of the motors!
 
@@ -34,6 +35,8 @@ When using 18650 batteries in series make sure to connect a BMS circuit and a ch
 | MX1508 | 1.5A Max: 2.5A | 2 - 9.6V    | Max voltage is 10V!                                 |
 | L9110S | 0.8A Max: 1.5A | 2.5 - 12V   | Sometimes they suddenly burn out!                   |
 | TB6612 | 1.2A Max: 3A   | 4.5 - 13.5V | Connect STBY, PWMA, PWMB to VCC pin.                |
+
+**NOTE**: It is recommended to put a 100nf (0.1uF) capacitor between the motor contacts to avoid interference.
 
 ### Servo motors
 The two types of servos are: 

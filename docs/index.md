@@ -3,7 +3,7 @@
 - 18650 in series. Output: 3.7V
 - 3x 18650 in paralell. Output 11.1V. Needs special charging/balancing circuit. Not recommended.
 
-When using 18650 batteries in series make sure to connect a BMS circuit and a charging circuit. Following parts are required for a safe 18650 assembly.
+When using 18650 batteries in series make sure to connect a BMS circuit and a charging circuit. Following parts are required for a safe 18650 assembly:
 - Charger: TP4056 (1A) or IP2312 (3A)
 - BMS: 1S-3876 (5A)
 - 18650 battery holder
@@ -14,8 +14,8 @@ When using 18650 batteries in series make sure to connect a BMS circuit and a ch
 
 | Model    | Current        | In Voltage   | Out Voltage   | Notes             
 |---       |---             |---           |---            |---                        |
-| SX1308   | 2A             | 2 - 24V      | 2 - 28V       | Small and powerful
-| MT3608   | 2A             | 2 - 24V      | 5 - 28V       |
+| SX1308   | 2A             | 2 - 24V      | 2 - 28V       | Small and powerful        |
+| MT3608   | 2A             | 2 - 24V      | 5 - 28V       |                           |
 
 #### Step down converters
 

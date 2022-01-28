@@ -13,14 +13,14 @@ When using 18650 batteries in series make sure to connect a BMS circuit and a ch
 
 **NOTE:** in case of TP405 choose the version without integrated BMS or it will constantly turn off the power due to high starting current of the motors!
 
-#### Step up converters (boosters)
+**Step up converters (boosters)**
 
 | Model    | Current        | In Voltage   | Out Voltage   | Notes             
 |---       |---             |---           |---            |---                        |
 | SX1308   | 2A             | 2 - 24V      | 2 - 28V       | Small and powerful        |
 | MT3608   | 2A             | 2 - 24V      | 5 - 28V       |                           |
 
-#### Step down converters
+**Step down converters**
 
 | Model    | Current        | In Voltage   | Out Voltage   | Notes                     |
 |---       |---             |---           |---            |---                        |

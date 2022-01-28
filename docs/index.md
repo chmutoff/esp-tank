@@ -1,3 +1,5 @@
+## Building an ESP controlled chassis
+
 ### Battery selection
 - 12V battery. Usually come with a spare charger.
 - 18650 in series. Output: 3.7V

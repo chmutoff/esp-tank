@@ -1,20 +1,24 @@
 ## Building an ESP controlled chassis
 
+- Select parts
+- Assembly
+- Compile and upload the firmware
+
 ### 1. Chassis selection
 - Mini TP100 chassis (W: 15cm, H: 6cm, L: 20cm)
 ![img](img/tp100-tank-chassis.png)
 - Acrylic car kit (W: 15cm, H: 6cm, L: 25cm)
 ![img](img/car-chassis.png)
 
-### 1. Battery selection
+### 2. Battery selection
 - 12V battery. Usually come with a spare charger.
-- 18650 in series. Output: 3.7V
+- 18650 in series. Output: 3.7V.
 - 3x 18650 in paralell. Output 11.1V. Needs special charging/balancing circuit. Not recommended.
 
 When using 18650 batteries in series make sure to connect a BMS circuit and a charging circuit. Following parts are required for a safe 18650 assembly:
 - Charger: TP4056 (1A) or IP2312 (3A)
 - BMS: 1S-3876 (5A)
-- 18650 battery holder
+- 18650 battery holder. TP100 chassis can fit 3x batteries underneeth. Car chassis can fit more batteries.
 - Switch to power on/off the whole system
 
 **NOTE:** in case of TP405, choose the version without integrated BMS or it will constantly turn off the power due to high starting current of the motors!
@@ -34,7 +38,7 @@ When using 18650 batteries in series make sure to connect a BMS circuit and a ch
 | MP2315   | 1.5-2A         | 4.5 - 24V    | 0.8 - 22V     | Tiny and powerful module  |
 | LM2596   | 3A             | 4.5 - 40V    | 1.23 - 37V    | Overpowered. Big size.    |
 
-### 2. Motor drivers
+### 3. Motor drivers
 
 | Model  | Current        | Voltage     | Notes                                               |
 |---     |---             |---          | ---                                                 |
@@ -46,14 +50,14 @@ When using 18650 batteries in series make sure to connect a BMS circuit and a ch
 
 **NOTE**: It is recommended to put a 100nf (0.1uF) capacitor between the motor contacts to avoid interference.
 
-### 3. Servo motors
+### 4. Servo motors
 The two types of servos are: 
 - SG90: micro servo motor with plastic gears
 - MG90: micro servo motor with metal gears
 
 Both servos need a 5V power supply. To attach a servo use standard servo pan/tilt mount with this [3D printed clip](https://www.thingiverse.com/thing:4934734)
 
-### 4. Main board
+### 5. Main board
 At the moment, the only tested board is [ESP32-CAM by AiThinker](http://www.ai-thinker.com/pro_view-24.html)
 
 ## Examples:

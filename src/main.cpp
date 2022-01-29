@@ -36,7 +36,7 @@ const char *wifi_ssid = TOSTRING(WIFI_SSID);
 #endif
 
 #ifndef WIFI_PASS
-const char *wifi_pass = "MyWifiNetworkName";
+const char *wifi_pass = "MyWifiNetworkPassword";
 #else
 const char *wifi_pass = TOSTRING(WIFI_PASS);
 #endif

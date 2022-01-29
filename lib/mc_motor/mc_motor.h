@@ -1,3 +1,14 @@
+/**
+ * 
+ * @file mc_motor.h
+ * @author Anton Chmutov Derevianko <sir.antoxic@gmail.com>
+ * @brief Header of mc_motor library
+ *  
+ * @copyright (C) 2022 Anton Chmutov Derevianko <sir.antoxic@gmail.com>
+ * This file is subject to the terms and conditions of the MIT license.
+ * See the LICENSE file in the top level directory for more details.
+ * 
+ */
 #ifndef __MC_MOTOR_H
 #define __MC_MOTOR_H
 

@@ -1,3 +1,14 @@
+/**
+ * 
+ * @file mc_servo.cpp
+ * @author Anton Chmutov Derevianko <sir.antoxic@gmail.com>
+ * @brief Library to control a servo motor using ESP32 MCPWM
+ *  
+ * @copyright (C) 2022 Anton Chmutov Derevianko <sir.antoxic@gmail.com>
+ * This file is subject to the terms and conditions of the MIT license.
+ * See the LICENSE file in the top level directory for more details.
+ * 
+ */
 #include "mc_servo.h"
 
 #define MC_SERVO_MCPWM_DUTY_MODE MCPWM_DUTY_MODE_0

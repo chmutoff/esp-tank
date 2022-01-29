@@ -1,3 +1,14 @@
+/**
+ * 
+ * @file main.cpp
+ * @author Anton Chmutov Derevianko <sir.antoxic@gmail.com>
+ * @brief The entry point of the project
+ *  
+ * @copyright (C) 2022 Anton Chmutov Derevianko <sir.antoxic@gmail.com>
+ * This file is subject to the terms and conditions of the MIT license.
+ * See the LICENSE file in the top level directory for more details.
+ * 
+ */
 #include <ArduinoOTA.h>
 #include <WiFi.h>
 #include "esp_camera.h"

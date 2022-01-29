@@ -1,3 +1,14 @@
+/**
+ * 
+ * @file mc_motor.cpp
+ * @author Anton Chmutov Derevianko <sir.antoxic@gmail.com>
+ * @brief Library to control a motor driver using ESP32 MCPWM
+ *  
+ * @copyright (C) 2022 Anton Chmutov Derevianko <sir.antoxic@gmail.com>
+ * This file is subject to the terms and conditions of the MIT license.
+ * See the LICENSE file in the top level directory for more details.
+ * 
+ */
 #include <Arduino.h>
 #include "mc_motor.h"
 

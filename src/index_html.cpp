@@ -1,3 +1,14 @@
+/**
+ * 
+ * @file index_html.cpp
+ * @author Anton Chmutov Derevianko <sir.antoxic@gmail.com>
+ * @brief Control webpage
+ *  
+ * @copyright (C) 2022 Anton Chmutov Derevianko <sir.antoxic@gmail.com>
+ * This file is subject to the terms and conditions of the MIT license.
+ * See the LICENSE file in the top level directory for more details.
+ * 
+ */
 #include <pgmspace.h>
 
 static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>

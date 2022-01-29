@@ -33,14 +33,16 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
         .slider {
             display: inline-block;
             margin: 15px 0;
-            width: 80%;
+            width: 70%;
         }
         .tooltiptext {
+            display: inline-block;
             background-color: #555;
             color: #fff;
             text-align: center;
             border-radius: 6px;
             padding: 5px;
+            width: 15%;
         }
     </style>
 </head>
@@ -57,16 +59,19 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
         </div>
         <div id="slidercontainer">
             <div>
+                <span>F: </span>
                 <input class="slider" type="range" min="0" max="100" value="0"
                     oninput="this.parentNode.querySelector('.tooltiptext').innerHTML = this.value + '%'; try{fetch(document.location.origin+'/aux?led='+this.value);}catch(e){}">
                 <span class="tooltiptext">0%</span>
             </div>
             <div>
+                <span>H: </span>
                 <input class="slider" type="range" min="0" max="180" value="90"
                     oninput="this.parentNode.querySelector('.tooltiptext').innerHTML = this.value + '°'; try{fetch(document.location.origin+'/aux?x='+this.value);}catch(e){}">
                 <span class="tooltiptext">90°</span>
             </div>
             <div>
+                <span>V: </span>
                 <input class="slider" type="range" min="0" max="180" value="90"
                     oninput="this.parentNode.querySelector('.tooltiptext').innerHTML = this.value + '°'; try{fetch(document.location.origin+'/aux?y='+this.value);}catch(e){}">
                 <span class="tooltiptext">90°</span>

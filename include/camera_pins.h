@@ -1,4 +1,19 @@
-#if defined(CAMERA_MODEL_WROVER_KIT)
+#define WROVER_KIT 1
+#define ESP_EYE 2
+#define M5STACK_PSRAM 3
+#define M5STACK_V2_PSRAM 4
+#define M5STACK_WIDE 5
+#define M5STACK_ESP32CAM 6
+#define AI_THINKER 7
+#define TTGO_T_JOURNAL 8
+
+//
+// WARNING!!! PSRAM IC required for UXGA resolution and high JPEG quality
+//            Ensure ESP32 Wrover Module or other board with PSRAM is selected
+//            Partial images will be transmitted if image exceeds buffer size
+//
+
+#if (CAMERA_MODEL == WROVER_KIT)
 #define PWDN_GPIO_NUM    -1
 #define RESET_GPIO_NUM   -1
 #define XCLK_GPIO_NUM    21
@@ -17,7 +32,7 @@
 #define HREF_GPIO_NUM    23
 #define PCLK_GPIO_NUM    22
 
-#elif defined(CAMERA_MODEL_ESP_EYE)
+#elif (CAMERA_MODEL == ESP_EYE)
 #define PWDN_GPIO_NUM    -1
 #define RESET_GPIO_NUM   -1
 #define XCLK_GPIO_NUM    4
@@ -36,7 +51,7 @@
 #define HREF_GPIO_NUM    27
 #define PCLK_GPIO_NUM    25
 
-#elif defined(CAMERA_MODEL_M5STACK_PSRAM)
+#elif (CAMERA_MODEL == M5STACK_PSRAM)
 #define PWDN_GPIO_NUM     -1
 #define RESET_GPIO_NUM    15
 #define XCLK_GPIO_NUM     27
@@ -55,7 +70,7 @@
 #define HREF_GPIO_NUM     26
 #define PCLK_GPIO_NUM     21
 
-#elif defined(CAMERA_MODEL_M5STACK_V2_PSRAM)
+#elif (CAMERA_MODEL == M5STACK_V2_PSRAM)
 #define PWDN_GPIO_NUM     -1
 #define RESET_GPIO_NUM    15
 #define XCLK_GPIO_NUM     27
@@ -74,7 +89,7 @@
 #define HREF_GPIO_NUM     26
 #define PCLK_GPIO_NUM     21
 
-#elif defined(CAMERA_MODEL_M5STACK_WIDE)
+#elif (CAMERA_MODEL == M5STACK_WIDE)
 #define PWDN_GPIO_NUM     -1
 #define RESET_GPIO_NUM    15
 #define XCLK_GPIO_NUM     27
@@ -93,7 +108,7 @@
 #define HREF_GPIO_NUM     26
 #define PCLK_GPIO_NUM     21
 
-#elif defined(CAMERA_MODEL_M5STACK_ESP32CAM)
+#elif (CAMERA_MODEL == M5STACK_ESP32CAM)
 #define PWDN_GPIO_NUM     -1
 #define RESET_GPIO_NUM    15
 #define XCLK_GPIO_NUM     27
@@ -112,7 +127,7 @@
 #define HREF_GPIO_NUM     26
 #define PCLK_GPIO_NUM     21
 
-#elif defined(CAMERA_MODEL_AI_THINKER)
+#elif (CAMERA_MODEL == AI_THINKER)
 #define PWDN_GPIO_NUM     32
 #define RESET_GPIO_NUM    -1
 #define XCLK_GPIO_NUM      0
@@ -131,7 +146,7 @@
 #define HREF_GPIO_NUM     23
 #define PCLK_GPIO_NUM     22
 
-#elif defined(CAMERA_MODEL_TTGO_T_JOURNAL)
+#elif (CAMERA_MODEL == TTGO_T_JOURNAL)
 #define PWDN_GPIO_NUM      0
 #define RESET_GPIO_NUM    15
 #define XCLK_GPIO_NUM     27

@@ -11,6 +11,8 @@
  */
 #include <ArduinoOTA.h>
 #include <WiFi.h>
+#include "camera_pins.h"
+#include "config.h"
 #include "esp_camera.h"
 #include "flash_led.h"
 #include "mc_motor.h"
@@ -18,57 +20,10 @@
 #include "soc/soc.h"          // disable brownout problems
 #include "soc/rtc_cntl_reg.h" // disable brownout problems
 
-#define STRINGIFY(x) #x
-#define TOSTRING(x) STRINGIFY(x) // Convert preprocessor macro to string
-
-//
-// WARNING!!! PSRAM IC required for UXGA resolution and high JPEG quality
-//            Ensure ESP32 Wrover Module or other board with PSRAM is selected
-//            Partial images will be transmitted if image exceeds buffer size
-//
-#define CAMERA_MODEL_AI_THINKER
-#include "camera_pins.h"
-
-#ifndef WIFI_SSID
-const char *wifi_ssid = "MyWifiNetworkName";
-#else
-const char *wifi_ssid = TOSTRING(WIFI_SSID);
-#endif
-
-#ifndef WIFI_PASS
-const char *wifi_pass = "MyWifiNetworkPassword";
-#else
-const char *wifi_pass = TOSTRING(WIFI_PASS);
-#endif
-
-#define HOST_NAME "esp-tank"
-
-#define FLASH_LED_PIN 4
-#define FLASH_LED_LEDC_CHANNEL LEDC_CHANNEL_7 // free ledc PWM channel
-
-#define MOTOR_L_PIN_A 13 // Left motor A
-#define MOTOR_L_PIN_B 15 // Left motor B
 mc_motor_dev_t motor_l;
-
-#define MOTOR_R_PIN_A 14 // Right motor A
-#define MOTOR_R_PIN_B 2  // Right motor B
 mc_motor_dev_t motor_r;
-
-#define MOTOR_TEST 0
-
-#define SERVO_H_PIN 12                   // Pin of the vertical servo
-#define SERVO_H_MIN_PULSEWIDTH_US (1000) // Minimum pulse width in microsecond
-#define SERVO_H_MAX_PULSEWIDTH_US (2000) // Maximum pulse width in microsecond
-#define SERVO_H_MAX_DEGREE (180)         // Maximum angle in degree upto which servo can rotate
 mc_servo_dev_t servo_h;
-
-#define SERVO_V_PIN 3                    // Pin of the horizontal servo
-#define SERVO_V_MIN_PULSEWIDTH_US (1000) // Minimum pulse width in microsecond
-#define SERVO_V_MAX_PULSEWIDTH_US (2000) // Maximum pulse width in microsecond
-#define SERVO_V_MAX_DEGREE (180)         // Maximum angle in degree upto which servo can rotate
 mc_servo_dev_t servo_v;
-
-#define SERVO_TEST 0
 
 void startWebServer();
 
@@ -111,7 +66,7 @@ void init_camera()
         config.fb_count = 1;
     }
 
-#if defined(CAMERA_MODEL_ESP_EYE)
+#if (CAMERA_MODEL == ESP_EYE)
     pinMode(13, INPUT_PULLUP);
     pinMode(14, INPUT_PULLUP);
 #endif
@@ -134,7 +89,7 @@ void init_camera()
     // drop down frame size for higher initial frame rate
     s->set_framesize(s, FRAMESIZE_QVGA);
 
-#if defined(CAMERA_MODEL_M5STACK_WIDE) || defined(CAMERA_MODEL_M5STACK_ESP32CAM)
+#if (CAMERA_MODEL == M5STACK_WIDE || CAMERA_MODEL == M5STACK_ESP32CAM)
     s->set_vflip(s, 1);
     s->set_hmirror(s, 1);
 #endif
@@ -146,7 +101,7 @@ void init_ota()
     ArduinoOTA.setPort(3232);
 
     // Hostname defaults to esp3232-[MAC]
-    ArduinoOTA.setHostname(HOST_NAME);
+    ArduinoOTA.setHostname(host_name);
 
     // No authentication by default
     //ArduinoOTA.setPassword("admin");
@@ -275,77 +230,7 @@ void setup()
     mc_servo_set_angle(&servo_h, 90);
     mc_servo_set_angle(&servo_v, 90);
 
-#if (MOTOR_TEST == 1)
-
-    /*
-    Serial.println("left forward");
-    for (int i = 0; i <= 100; ++i)
-    {
-        Serial.printf("speed %d\n", i);
-        mc_motor_set_speed(&motor_l, i);
-        delay(100);
-    }
-    delay(5000);
-
-    mc_motor_set_speed(&motor_l, 0);
-
-    delay(3000);
-
-    Serial.println("left backward");
-    for (int i = 0; i >= -100; --i)
-    {
-        Serial.printf("speed %d\n", i);
-        mc_motor_set_speed(&motor_l, i);
-        delay(100);
-    }
-
-    delay(5000);
-
-    mc_motor_set_speed(&motor_l, 0);
-
-    delay(3000);
-
-    Serial.println("right forward");
-    for (int i = 0; i <= 100; ++i)
-    {
-        Serial.printf("speed %d\n", i);
-        mc_motor_set_speed(&motor_r, i);
-        delay(100);
-    }
-    delay(5000);
-
-    mc_motor_set_speed(&motor_r, 0);
-
-    delay(3000);
-
-    Serial.println("right backward");
-    for (int i = 0; i >= -100; --i)
-    {
-        Serial.printf("speed %d\n", i);
-        mc_motor_set_speed(&motor_r, i);
-        delay(100);
-    }
-
-    delay(5000);
-
-    mc_motor_set_speed(&motor_r, 0);
-    delay(3000);
-*/
-    Serial.println("both forward");
-    for (int i = 0; i <= 100; ++i)
-    {
-        Serial.printf("speed %d\n", i);
-        mc_motor_set_speed(&motor_l, i);
-        mc_motor_set_speed(&motor_r, i);
-        delay(100);
-    }
-
-    delay(7000);
-    mc_motor_set_speed(&motor_l, 0);
-    mc_motor_set_speed(&motor_r, 0);
-#endif
-
-    WiFi.begin(wifi_ssid, TOSTRING(WIFI_PASS));
+    WiFi.begin(wifi_ssid, TO_STRING(WIFI_PASS));
 
     Serial.printf("Connecting to Wifi \"%s\"\n", wifi_ssid);
 
@@ -369,24 +254,4 @@ void setup()
 void loop()
 {
     ArduinoOTA.handle();
-
-#if (SERVO_TEST == 1)
-    for (int pos = 0; pos <= 180; pos += 10)
-    {
-        //Serial.printf("Angle: %d\n", pos);
-        ArduinoOTA.handle();
-        mc_servo_set_angle(&servo_h, pos);
-        mc_servo_set_angle(&servo_v, pos);
-        delay(100);
-    }
-
-    for (int pos = 180; pos >= 0; pos -= 10)
-    {
-        //Serial.printf("Angle: %d\n", pos);
-        ArduinoOTA.handle();
-        mc_servo_set_angle(&servo_h, pos);
-        mc_servo_set_angle(&servo_v, pos);
-        delay(100);
-    }
-#endif
 }

@@ -24,8 +24,6 @@ typedef struct
     mcpwm_io_signals_t mcpwm_io_signal_a;
     mcpwm_io_signals_t mcpwm_io_signal_b;
     mcpwm_timer_t mcpwm_timer_num;
-    mcpwm_operator_t mcpwm_op_a;
-    mcpwm_operator_t mcpwm_op_b;
 } mc_motor_config_t;
 
 typedef struct
@@ -33,18 +31,39 @@ typedef struct
     uint32_t min_duty;
     mcpwm_unit_t mcpwm_unit_num;
     mcpwm_timer_t mcpwm_timer_num;
-    mcpwm_operator_t mcpwm_op_a;
-    mcpwm_operator_t mcpwm_op_b;
 } mc_motor_dev_t;
 
+typedef enum
+{
+    MCPWM_U0_O0 = 0, /*!<MCPWM unit 0 operator 0 (PWM0A and PWM0B) */
+    MCPWM_U0_O1,     /*!<MCPWM unit 0 operator 1 (PWM1A and PWM1B) */
+    MCPWM_U0_O2,     /*!<MCPWM unit 0 operator 2 (PWM2A and PWM2B) */
+    MCPWM_U1_O0,     /*!<MCPWM unit 1 operator 0 (PWM0A and PWM0B) */
+    MCPWM_U1_O1,     /*!<MCPWM unit 1 operator 1 (PWM1A and PWM1B) */
+    MCPWM_U1_O2,     /*!<MCPWM unit 1 operator 2 (PWM2A and PWM2B) */
+} mc_motor_output_t;
+
 /**
- * @brief Initialization of MCPWM unit to control 2 pin H bridge driver with 1 brushless motor
+ * @brief Easy initialization of MCPWM unit to control 2 pin H bridge driver with 1 brushless motor
+ * 
+ * @param[out] dev    motor device to be initialized
+ * @param[in]  output mc_motor_output_t MCPWM output number
+ * @param[in]  pin_a PIN A of H bridge driver
+ * @param[in]  pin_b PIN B of H bridge driver
+ * @param[in]  frequency PWM frequency to control the motor
+ * @param[in]  min_duty Minimal duty needed to start motor
+ * @return                   ESP_OK on success
+ */
+esp_err_t mc_motor_init(mc_motor_dev_t *dev, mc_motor_output_t output, uint8_t pin_a, uint8_t pin_b, uint32_t frequency, uint32_t min_duty);
+
+/**
+ * @brief Advanced initialization of MCPWM unit to control 2 pin H bridge driver with 1 brushless motor
  * 
  * @param[out] dev    motor device to be initialized
  * @param[in]  config configuration parameters
  * @return                   ESP_OK on success
  */
-esp_err_t mc_motor_init(mc_motor_dev_t *dev, mc_motor_config_t *config);
+esp_err_t mc_motor_advanced_init(mc_motor_dev_t *dev, mc_motor_config_t *config);
 
 /**
  * @brief Set the speed of the motor. Between 1 and 100% forward and between -1 and -100% backward

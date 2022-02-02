@@ -186,8 +186,7 @@ void setup()
         .mcpwm_io_signal_a = MCPWM0A,
         .mcpwm_io_signal_b = MCPWM0B,
         .mcpwm_timer_num = MCPWM_TIMER_0,
-        .mcpwm_op_a = MCPWM_OPR_A,
-        .mcpwm_op_b = MCPWM_OPR_B};
+    };
 
     mc_motor_config_t motor_r_config = {
         .pin_a = MOTOR_R_PIN_A,
@@ -198,11 +197,10 @@ void setup()
         .mcpwm_io_signal_a = MCPWM1A,
         .mcpwm_io_signal_b = MCPWM1B,
         .mcpwm_timer_num = MCPWM_TIMER_1,
-        .mcpwm_op_a = MCPWM_OPR_A,
-        .mcpwm_op_b = MCPWM_OPR_B};
+    };
 
-    mc_motor_init(&motor_l, &motor_l_config);
-    mc_motor_init(&motor_r, &motor_r_config);
+    mc_motor_advanced_init(&motor_l, &motor_l_config);
+    mc_motor_advanced_init(&motor_r, &motor_r_config);
 
     // Servo init
     mc_servo_config_t servo_h_config = {

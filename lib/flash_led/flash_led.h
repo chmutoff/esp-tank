@@ -2,6 +2,8 @@
 #ifndef __FLASH_LED_H
 #define __FLASH_LED_H
 
+#include "driver/ledc.h"
+
 #define FLASH_LED_PWM_FREQUENCY 50000                               // 50kHz frequency
 #define FLASH_LED_PWM_RESOLUTION 10                                 // 10bit resolution
 #define FLASH_LED_PWM_MAX_VALUE (1 << FLASH_LED_PWM_RESOLUTION) - 1 // maximum value provided to ledcWrite()
@@ -22,12 +24,19 @@ typedef struct
 int flash_led_init(flash_led_config_t *config);
 
 /**
- * @brief Set the brightness of flash led using.
+ * @brief Set the brightness of the flash led.
  * 
  * @param[in] val brightness percentage value from 0(OFF) to 100(MAX)
- * @return                   0 on success
+ * @return                   the actual brightness value that is set using logarithmic scale
  * @return                  -1 on error
  */
 int flash_led_set_brightness(int val);
+
+/**
+ * @brief Get the brightness of the flash led.
+ * 
+ * @return brightness percentage value from 0(OFF) to 100(MAX)
+ */
+uint32_t flash_led_get_brightness();
 
 #endif /* __FLASH_LED_H */

@@ -23,22 +23,29 @@ int flash_led_set_brightness(int val)
     {
         ledcWrite(_ledc_chan, 0);
         Serial.println("Flash led OFF");
+        return 0;
     }
     else if (val == 100)
     {
         ledcWrite(_ledc_chan, FLASH_LED_PWM_MAX_VALUE);
         Serial.println("Flash led 100%");
+        return 100;
     }
     else if (val > 0 && val < 100)
     {
         int brightness = round((pow(2, (1 + (val * 0.02))) - 2) / 6 * FLASH_LED_PWM_MAX_VALUE);
         ledcWrite(_ledc_chan, brightness);
         Serial.printf("Flash led %d%%, pwm %d\n", val, brightness);
+        return brightness;
     }
     else
     {
         Serial.printf("Flash led received wrong brightnes value: %d\n", val);
         return -1;
     }
-    return 0;
+}
+
+uint32_t flash_led_get_brightness()
+{
+    return ledcRead(_ledc_chan);
 }

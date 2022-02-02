@@ -223,8 +223,8 @@ void setup()
         .mcpwm_timer_num = MCPWM_TIMER_2,
         .mcpwm_op_num = MCPWM_OPR_B};
 
-    mc_servo_init(&servo_h, &servo_h_config);
-    mc_servo_init(&servo_v, &servo_v_config);
+    mc_servo_advanced_init(&servo_h, &servo_h_config);
+    mc_servo_advanced_init(&servo_v, &servo_v_config);
     mc_servo_set_angle(&servo_h, 90);
     mc_servo_set_angle(&servo_v, 90);
 

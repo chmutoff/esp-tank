@@ -36,14 +36,43 @@ typedef struct
     mcpwm_operator_t mcpwm_op_num;
 } mc_servo_dev_t;
 
+typedef enum
+{
+    MCPWM_U0_A0 = 0, /*!<MCPWM unit 0 operator 0 PWM0A */
+    MCPWM_U0_B0,     /*!<MCPWM unit 0 operator 0 PWM0B */
+    MCPWM_U0_A1,     /*!<MCPWM unit 0 operator 1 PWM1A */
+    MCPWM_U0_B1,     /*!<MCPWM unit 0 operator 1 PWM1B */
+    MCPWM_U0_A2,     /*!<MCPWM unit 0 operator 2 PWM2A */
+    MCPWM_U0_B2,     /*!<MCPWM unit 0 operator 2 PWM2B */
+    MCPWM_U1_A0,     /*!<MCPWM unit 1 operator 0 PWM0A */
+    MCPWM_U1_B0,     /*!<MCPWM unit 1 operator 0 PWM0B */
+    MCPWM_U1_A1,     /*!<MCPWM unit 1 operator 1 PWM1A */
+    MCPWM_U1_B1,     /*!<MCPWM unit 1 operator 1 PWM1B */
+    MCPWM_U1_A2,     /*!<MCPWM unit 1 operator 2 PWM2A */
+    MCPWM_U1_B2,     /*!<MCPWM unit 1 operator 2 PWM2B */
+} mc_servo_output_t;
+
 /**
- * @brief Initialization of MCPWM unit to control a servo
+ * @brief Initialization of MCPWM output to control a servo
+ * 
+ * @param[out] dev                  servo device to be initialized
+ * @param[in]  pin                  servo data pin
+ * @param[in]  min_pulse_duration   Minimum pulse width in microseconds
+ * @param[in]  max_pulse_duration   Maximum pulse width in microsecond
+ * @param[in]  max_angle            Maximum angle in degree upto which servo can rotate
+ * @param[in]  output               mc_servo_output_t MCPWM output number
+ * @return                          ESP_OK on success
+ */
+esp_err_t mc_servo_init(mc_servo_dev_t *dev, uint8_t pin, uint16_t min_pulse_duration, uint16_t max_pulse_duration, uint16_t max_angle, mc_servo_output_t output);
+
+/**
+ * @brief Initialization of MCPWM output to control a servo
  * 
  * @param[out] dev    servo device to be initialized
  * @param[in]  config configuration parameters
  * @return                   ESP_OK on success
  */
-esp_err_t mc_servo_init(mc_servo_dev_t *dev, mc_servo_config_t *config);
+esp_err_t mc_servo_advanced_init(mc_servo_dev_t *dev, mc_servo_config_t *config);
 
 /**
  * @brief Set an angle between 0 and configured max_angle of a servo.

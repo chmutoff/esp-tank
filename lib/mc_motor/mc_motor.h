@@ -47,14 +47,14 @@ typedef enum
  * @brief Easy initialization of MCPWM unit to control 2 pin H bridge driver with 1 brushless motor
  * 
  * @param[out] dev    motor device to be initialized
- * @param[in]  output mc_motor_output_t MCPWM output number
  * @param[in]  pin_a PIN A of H bridge driver
  * @param[in]  pin_b PIN B of H bridge driver
  * @param[in]  frequency PWM frequency to control the motor
  * @param[in]  min_duty Minimal duty needed to start motor
+ * @param[in]  output mc_motor_output_t MCPWM output number
  * @return                   ESP_OK on success
  */
-esp_err_t mc_motor_init(mc_motor_dev_t *dev, mc_motor_output_t output, uint8_t pin_a, uint8_t pin_b, uint32_t frequency, uint32_t min_duty);
+esp_err_t mc_motor_init(mc_motor_dev_t *dev, uint8_t pin_a, uint8_t pin_b, uint32_t frequency, uint32_t min_duty, mc_motor_output_t output);
 
 /**
  * @brief Advanced initialization of MCPWM unit to control 2 pin H bridge driver with 1 brushless motor

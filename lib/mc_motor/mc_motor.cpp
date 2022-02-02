@@ -14,7 +14,7 @@
 
 #define MC_MOTOR_MCPWM_DUTY_MODE MCPWM_DUTY_MODE_0
 
-esp_err_t mc_motor_init(mc_motor_dev_t *dev, mc_motor_output_t output, uint8_t pin_a, uint8_t pin_b, uint32_t frequency, uint32_t min_duty)
+esp_err_t mc_motor_init(mc_motor_dev_t *dev, uint8_t pin_a, uint8_t pin_b, uint32_t frequency, uint32_t min_duty, mc_motor_output_t output)
 {
     mc_motor_config_t config = {
         .pin_a = pin_a,

@@ -203,28 +203,8 @@ void setup()
     mc_motor_advanced_init(&motor_r, &motor_r_config);
 
     // Servo init
-    mc_servo_config_t servo_h_config = {
-        .pin = SERVO_H_PIN,
-        .min_pulse_duration = SERVO_H_MIN_PULSEWIDTH_US,
-        .max_pulse_duration = SERVO_H_MAX_PULSEWIDTH_US,
-        .max_angle = SERVO_H_MAX_DEGREE,
-        .mcpwm_unit_num = MCPWM_UNIT_0,
-        .mcpwm_io_signal = MCPWM2A,
-        .mcpwm_timer_num = MCPWM_TIMER_2,
-        .mcpwm_op_num = MCPWM_OPR_A};
-
-    mc_servo_config_t servo_v_config = {
-        .pin = SERVO_V_PIN,
-        .min_pulse_duration = SERVO_V_MIN_PULSEWIDTH_US,
-        .max_pulse_duration = SERVO_V_MAX_PULSEWIDTH_US,
-        .max_angle = SERVO_V_MAX_DEGREE,
-        .mcpwm_unit_num = MCPWM_UNIT_0,
-        .mcpwm_io_signal = MCPWM2B,
-        .mcpwm_timer_num = MCPWM_TIMER_2,
-        .mcpwm_op_num = MCPWM_OPR_B};
-
-    mc_servo_advanced_init(&servo_h, &servo_h_config);
-    mc_servo_advanced_init(&servo_v, &servo_v_config);
+    mc_servo_init(&servo_h, SERVO_H_PIN, SERVO_H_MIN_PULSEWIDTH_US, SERVO_H_MAX_PULSEWIDTH_US, SERVO_H_MAX_DEGREE, MCPWM_U0_A2);
+    mc_servo_init(&servo_v, SERVO_V_PIN, SERVO_V_MIN_PULSEWIDTH_US, SERVO_V_MAX_PULSEWIDTH_US, SERVO_V_MAX_DEGREE, MCPWM_U0_B2);
     mc_servo_set_angle(&servo_h, 90);
     mc_servo_set_angle(&servo_v, 90);
 

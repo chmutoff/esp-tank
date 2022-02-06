@@ -232,11 +232,17 @@ void setup()
 
     Serial.printf("Connecting to Wifi \"%s\"\n", wifi_ssid);
 
+    pinMode(BUILTIN_LED_PIN, OUTPUT);
+
     while (WiFi.status() != WL_CONNECTED)
     {
-        delay(500);
+        digitalWrite(BUILTIN_LED_PIN, LOW);
+        delay(200);
+        digitalWrite(BUILTIN_LED_PIN, HIGH);
+        delay(200);
         Serial.print(".");
     }
+    digitalWrite(BUILTIN_LED_PIN, LOW);
     Serial.println("");
     Serial.println("WiFi connected");
 

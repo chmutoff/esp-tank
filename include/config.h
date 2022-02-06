@@ -29,6 +29,10 @@ const char *host_name = TO_STRING(HOST_NAME);
 #define FLASH_LED_LEDC_CHANNEL LEDC_CHANNEL_7 // free ledc PWM channel
 #endif
 
+#ifndef BUILTIN_LED_PIN
+#define BUILTIN_LED_PIN 33
+#endif
+
 #ifndef MOTOR_L_PIN_A
 #define MOTOR_L_PIN_A 13 // Left motor A
 #endif

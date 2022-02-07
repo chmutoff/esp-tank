@@ -176,31 +176,9 @@ void setup()
 
     flash_led_init(&flash_led_config);
 
-    // Motor pin init
-    mc_motor_config_t motor_l_config = {
-        .pin_a = MOTOR_L_PIN_A,
-        .pin_b = MOTOR_L_PIN_B,
-        .frequency = 500,
-        .min_duty = 0,
-        .mcpwm_unit_num = MCPWM_UNIT_0,
-        .mcpwm_io_signal_a = MCPWM0A,
-        .mcpwm_io_signal_b = MCPWM0B,
-        .mcpwm_timer_num = MCPWM_TIMER_0,
-    };
-
-    mc_motor_config_t motor_r_config = {
-        .pin_a = MOTOR_R_PIN_A,
-        .pin_b = MOTOR_R_PIN_B,
-        .frequency = 500,
-        .min_duty = 0,
-        .mcpwm_unit_num = MCPWM_UNIT_0,
-        .mcpwm_io_signal_a = MCPWM1A,
-        .mcpwm_io_signal_b = MCPWM1B,
-        .mcpwm_timer_num = MCPWM_TIMER_1,
-    };
-
-    mc_motor_advanced_init(&motor_l, &motor_l_config);
-    mc_motor_advanced_init(&motor_r, &motor_r_config);
+    // Motor init
+    mc_motor_init(&motor_l, MOTOR_L_PIN_A, MOTOR_L_PIN_B, 500, MOTOR_L_MIN_DUTY, MCPWM_U0_O0);
+    mc_motor_init(&motor_r, MOTOR_R_PIN_A, MOTOR_R_PIN_B, 500, MOTOR_R_MIN_DUTY, MCPWM_U0_O1);
 
     // Servo init
     mc_servo_init(&servo_h, SERVO_H_PIN, SERVO_H_MIN_PULSEWIDTH_US, SERVO_H_MAX_PULSEWIDTH_US, SERVO_H_MAX_DEGREE, MCPWM_U0_A2);

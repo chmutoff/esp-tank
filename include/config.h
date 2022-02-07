@@ -39,12 +39,18 @@ const char *host_name = TO_STRING(HOST_NAME);
 #ifndef MOTOR_L_PIN_B
 #define MOTOR_L_PIN_B 15 // Left motor B
 #endif
+#ifndef MOTOR_L_MIN_DUTY
+#define MOTOR_L_MIN_DUTY 25 // Minimal duty in %
+#endif
 
 #ifndef MOTOR_R_PIN_A
 #define MOTOR_R_PIN_A 14 // Right motor A
 #endif
 #ifndef MOTOR_R_PIN_B
 #define MOTOR_R_PIN_B 2 // Right motor B
+#endif
+#ifndef MOTOR_R_MIN_DUTY
+#define MOTOR_R_MIN_DUTY 25 // Minimal duty in %
 #endif
 
 #ifndef SERVO_H_PIN

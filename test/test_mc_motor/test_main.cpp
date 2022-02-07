@@ -8,12 +8,12 @@ mc_motor_dev_t motor_r;
 
 void test_set_up_left_motor(void)
 {
-    TEST_ASSERT_EQUAL(ESP_OK, mc_motor_init(&motor_l, MOTOR_L_PIN_A, MOTOR_L_PIN_B, 500, 0, MCPWM_U0_O0));
+    TEST_ASSERT_EQUAL(ESP_OK, mc_motor_init(&motor_l, MOTOR_L_PIN_A, MOTOR_L_PIN_B, 500, MOTOR_L_MIN_DUTY, MCPWM_U0_O0));
 }
 
 void test_set_up_right_motor(void)
 {
-    TEST_ASSERT_EQUAL(ESP_OK, mc_motor_init(&motor_r, MOTOR_R_PIN_A, MOTOR_R_PIN_B, 500, 0, MCPWM_U0_O1));
+    TEST_ASSERT_EQUAL(ESP_OK, mc_motor_init(&motor_r, MOTOR_R_PIN_A, MOTOR_R_PIN_B, 500, MOTOR_R_MIN_DUTY, MCPWM_U0_O1));
 }
 
 void setup()
@@ -30,14 +30,8 @@ void test_forward(void)
     {
         mc_motor_set_speed(&motor_l, i);
         mc_motor_set_speed(&motor_r, i);
-
-        TEST_ASSERT_EQUAL(i, mcpwm_get_duty(motor_l.mcpwm_unit_num, motor_l.mcpwm_timer_num, MCPWM_OPR_A));
-        TEST_ASSERT_EQUAL(i, mcpwm_get_duty(motor_l.mcpwm_unit_num, motor_l.mcpwm_timer_num, MCPWM_OPR_B));
-
-        TEST_ASSERT_EQUAL(i, mcpwm_get_duty(motor_r.mcpwm_unit_num, motor_r.mcpwm_timer_num, MCPWM_OPR_A));
-        TEST_ASSERT_EQUAL(i, mcpwm_get_duty(motor_r.mcpwm_unit_num, motor_r.mcpwm_timer_num, MCPWM_OPR_B));
-
-        delay(500);
+        printf("Forward speed %d\n", i);
+        delay(1000);
     }
 
     delay(5000);
@@ -45,12 +39,7 @@ void test_forward(void)
     mc_motor_set_speed(&motor_l, 0);
     mc_motor_set_speed(&motor_r, 0);
 
-    TEST_ASSERT_EQUAL(0, mcpwm_get_duty(motor_l.mcpwm_unit_num, motor_l.mcpwm_timer_num, MCPWM_OPR_A));
-    TEST_ASSERT_EQUAL(0, mcpwm_get_duty(motor_l.mcpwm_unit_num, motor_l.mcpwm_timer_num, MCPWM_OPR_B));
-    TEST_ASSERT_EQUAL(0, mcpwm_get_duty(motor_r.mcpwm_unit_num, motor_r.mcpwm_timer_num, MCPWM_OPR_A));
-    TEST_ASSERT_EQUAL(0, mcpwm_get_duty(motor_r.mcpwm_unit_num, motor_r.mcpwm_timer_num, MCPWM_OPR_B));
-
-    delay(500);
+    delay(1000);
 }
 
 void test_backwards(void)
@@ -60,14 +49,8 @@ void test_backwards(void)
     {
         mc_motor_set_speed(&motor_l, i);
         mc_motor_set_speed(&motor_r, i);
-
-        TEST_ASSERT_EQUAL(i, mcpwm_get_duty(motor_l.mcpwm_unit_num, motor_l.mcpwm_timer_num, MCPWM_OPR_A));
-        TEST_ASSERT_EQUAL(i, mcpwm_get_duty(motor_l.mcpwm_unit_num, motor_l.mcpwm_timer_num, MCPWM_OPR_B));
-
-        TEST_ASSERT_EQUAL(i, mcpwm_get_duty(motor_r.mcpwm_unit_num, motor_r.mcpwm_timer_num, MCPWM_OPR_A));
-        TEST_ASSERT_EQUAL(i, mcpwm_get_duty(motor_r.mcpwm_unit_num, motor_r.mcpwm_timer_num, MCPWM_OPR_B));
-
-        delay(500);
+        printf("Backward speed %d\n", i);
+        delay(1000);
     }
 
     delay(5000);
@@ -75,60 +58,35 @@ void test_backwards(void)
     mc_motor_set_speed(&motor_l, 0);
     mc_motor_set_speed(&motor_r, 0);
 
-    TEST_ASSERT_EQUAL(0, mcpwm_get_duty(motor_l.mcpwm_unit_num, motor_l.mcpwm_timer_num, MCPWM_OPR_A));
-    TEST_ASSERT_EQUAL(0, mcpwm_get_duty(motor_l.mcpwm_unit_num, motor_l.mcpwm_timer_num, MCPWM_OPR_B));
-    TEST_ASSERT_EQUAL(0, mcpwm_get_duty(motor_r.mcpwm_unit_num, motor_r.mcpwm_timer_num, MCPWM_OPR_A));
-    TEST_ASSERT_EQUAL(0, mcpwm_get_duty(motor_r.mcpwm_unit_num, motor_r.mcpwm_timer_num, MCPWM_OPR_B));
-
-    delay(500);
+    delay(1000);
 }
 
 void test_turn_clockwise(void)
 {
-    mc_motor_set_speed(&motor_l, -100);
-    mc_motor_set_speed(&motor_r, 100);
-
-    TEST_ASSERT_EQUAL(-100, mcpwm_get_duty(motor_l.mcpwm_unit_num, motor_l.mcpwm_timer_num, MCPWM_OPR_A));
-    TEST_ASSERT_EQUAL(-100, mcpwm_get_duty(motor_l.mcpwm_unit_num, motor_l.mcpwm_timer_num, MCPWM_OPR_B));
-
-    TEST_ASSERT_EQUAL(100, mcpwm_get_duty(motor_r.mcpwm_unit_num, motor_r.mcpwm_timer_num, MCPWM_OPR_A));
-    TEST_ASSERT_EQUAL(100, mcpwm_get_duty(motor_r.mcpwm_unit_num, motor_r.mcpwm_timer_num, MCPWM_OPR_B));
+    Serial.println("Clockwise");
+    mc_motor_set_speed(&motor_l, 50);
+    mc_motor_set_speed(&motor_r, -50);
 
     delay(5000);
 
     mc_motor_set_speed(&motor_l, 0);
     mc_motor_set_speed(&motor_r, 0);
 
-    TEST_ASSERT_EQUAL(0, mcpwm_get_duty(motor_l.mcpwm_unit_num, motor_l.mcpwm_timer_num, MCPWM_OPR_A));
-    TEST_ASSERT_EQUAL(0, mcpwm_get_duty(motor_l.mcpwm_unit_num, motor_l.mcpwm_timer_num, MCPWM_OPR_B));
-    TEST_ASSERT_EQUAL(0, mcpwm_get_duty(motor_r.mcpwm_unit_num, motor_r.mcpwm_timer_num, MCPWM_OPR_A));
-    TEST_ASSERT_EQUAL(0, mcpwm_get_duty(motor_r.mcpwm_unit_num, motor_r.mcpwm_timer_num, MCPWM_OPR_B));
-
-    delay(500);
+    delay(1000);
 }
 
 void test_turn_counterclockwise(void)
 {
-    mc_motor_set_speed(&motor_l, 100);
-    mc_motor_set_speed(&motor_r, -100);
-
-    TEST_ASSERT_EQUAL(100, mcpwm_get_duty(motor_l.mcpwm_unit_num, motor_l.mcpwm_timer_num, MCPWM_OPR_A));
-    TEST_ASSERT_EQUAL(100, mcpwm_get_duty(motor_l.mcpwm_unit_num, motor_l.mcpwm_timer_num, MCPWM_OPR_B));
-
-    TEST_ASSERT_EQUAL(-100, mcpwm_get_duty(motor_r.mcpwm_unit_num, motor_r.mcpwm_timer_num, MCPWM_OPR_A));
-    TEST_ASSERT_EQUAL(-100, mcpwm_get_duty(motor_r.mcpwm_unit_num, motor_r.mcpwm_timer_num, MCPWM_OPR_B));
+    Serial.println("Counterclockwise");
+    mc_motor_set_speed(&motor_l, -50);
+    mc_motor_set_speed(&motor_r, 50);
 
     delay(5000);
 
     mc_motor_set_speed(&motor_l, 0);
     mc_motor_set_speed(&motor_r, 0);
 
-    TEST_ASSERT_EQUAL(0, mcpwm_get_duty(motor_l.mcpwm_unit_num, motor_l.mcpwm_timer_num, MCPWM_OPR_A));
-    TEST_ASSERT_EQUAL(0, mcpwm_get_duty(motor_l.mcpwm_unit_num, motor_l.mcpwm_timer_num, MCPWM_OPR_B));
-    TEST_ASSERT_EQUAL(0, mcpwm_get_duty(motor_r.mcpwm_unit_num, motor_r.mcpwm_timer_num, MCPWM_OPR_A));
-    TEST_ASSERT_EQUAL(0, mcpwm_get_duty(motor_r.mcpwm_unit_num, motor_r.mcpwm_timer_num, MCPWM_OPR_B));
-
-    delay(500);
+    delay(1000);
 }
 
 void loop()

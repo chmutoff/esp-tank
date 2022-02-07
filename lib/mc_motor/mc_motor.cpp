@@ -12,8 +12,6 @@
 #include <Arduino.h>
 #include "mc_motor.h"
 
-#define MC_MOTOR_MCPWM_DUTY_MODE MCPWM_DUTY_MODE_0
-
 esp_err_t mc_motor_init(mc_motor_dev_t *dev, uint8_t pin_a, uint8_t pin_b, uint32_t frequency, uint32_t min_duty, mc_motor_output_t output)
 {
     mc_motor_config_t config = {
@@ -39,7 +37,7 @@ esp_err_t mc_motor_advanced_init(mc_motor_dev_t *dev, mc_motor_config_t *config)
         .frequency = config->frequency,
         .cmpr_a = 0.0,
         .cmpr_b = 0.0,
-        .duty_mode = MC_MOTOR_MCPWM_DUTY_MODE,
+        .duty_mode = MCPWM_DUTY_MODE_0,
         .counter_mode = MCPWM_UP_COUNTER};
 
     ESP_ERROR_CHECK(mcpwm_init(config->mcpwm_unit_num, config->mcpwm_timer_num, &pwm_config));
@@ -62,7 +60,7 @@ esp_err_t mc_motor_set_speed(mc_motor_dev_t *dev, int8_t speed)
     else if (speed > 0)
     {
         mcpwm_set_duty(dev->mcpwm_unit_num, dev->mcpwm_timer_num, MCPWM_OPR_A, map(speed, 0, 100, dev->min_duty, 100));
-        mcpwm_set_duty_type(dev->mcpwm_unit_num, dev->mcpwm_timer_num, MCPWM_OPR_A, MC_MOTOR_MCPWM_DUTY_MODE);
+        mcpwm_set_duty_type(dev->mcpwm_unit_num, dev->mcpwm_timer_num, MCPWM_OPR_A, MCPWM_DUTY_MODE_0);
 
         mcpwm_set_signal_low(dev->mcpwm_unit_num, dev->mcpwm_timer_num, MCPWM_OPR_B);
     }
@@ -71,7 +69,7 @@ esp_err_t mc_motor_set_speed(mc_motor_dev_t *dev, int8_t speed)
         mcpwm_set_signal_low(dev->mcpwm_unit_num, dev->mcpwm_timer_num, MCPWM_OPR_A);
 
         mcpwm_set_duty(dev->mcpwm_unit_num, dev->mcpwm_timer_num, MCPWM_OPR_B, map(abs(speed), 0, 100, dev->min_duty, 100));
-        mcpwm_set_duty_type(dev->mcpwm_unit_num, dev->mcpwm_timer_num, MCPWM_OPR_B, MC_MOTOR_MCPWM_DUTY_MODE);
+        mcpwm_set_duty_type(dev->mcpwm_unit_num, dev->mcpwm_timer_num, MCPWM_OPR_B, MCPWM_DUTY_MODE_0);
     }
 
     return ESP_OK;

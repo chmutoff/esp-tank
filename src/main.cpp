@@ -182,6 +182,7 @@ void setup()
     mc_servo_set_angle(&servo_h, 90);
     mc_servo_set_angle(&servo_v, 90);
 
+    WiFi.setHostname(host_name);
     WiFi.begin(wifi_ssid, wifi_pass);
 
     Serial.printf("Connecting to Wifi \"%s\"\n", wifi_ssid);

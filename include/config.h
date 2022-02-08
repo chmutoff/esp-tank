@@ -34,7 +34,7 @@ const char *host_name = TO_STRING(HOST_NAME);
 #endif
 
 #ifndef MOTOR_L_PIN_A
-#define MOTOR_L_PIN_A 13 // Left motor A
+#define MOTOR_L_PIN_A 14 // Left motor A
 #endif
 #ifndef MOTOR_L_PIN_B
 #define MOTOR_L_PIN_B 15 // Left motor B
@@ -44,7 +44,7 @@ const char *host_name = TO_STRING(HOST_NAME);
 #endif
 
 #ifndef MOTOR_R_PIN_A
-#define MOTOR_R_PIN_A 14 // Right motor A
+#define MOTOR_R_PIN_A 13 // Right motor A
 #endif
 #ifndef MOTOR_R_PIN_B
 #define MOTOR_R_PIN_B 2 // Right motor B

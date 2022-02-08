@@ -70,5 +70,5 @@ Because the voltage is above 5V we need a step down converter to reduce the volt
 ![img](img/Sketch_9V_2PIN_DRV_bb.png)
 
 ### Using 18650 in series and TB6612 motor driver
-Connect STBY, PWMA, PWMB to VCC(5V!) pin When using TB6612 instead of a common 4 pin motor driver.
+Connect STBY, PWMA, PWMB to VCC(3.3V or 5V!) pin when using TB6612 instead of a common 4 pin motor driver.
 ![img](img/Sketch_18650_TB6612_bb.png)

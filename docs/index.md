@@ -11,9 +11,9 @@
 ![img](img/car-chassis.png)
 
 ### 2. Battery selection
-- 12V battery. Usually come with a spare charger.
-- 18650 in series. Output: 3.7V.
-- 3x 18650 in paralell. Output 11.1V. Needs special charging/balancing circuit. Not recommended.
+- 12V battery. Usually comes with a spare charger.
+- Multple 18650 in series. Output: 3.7V.
+- Multple 18650 in paralell. Output 11.1V. Needs special charging/balancing circuit. Not recommended.
 
 When using 18650 batteries in series make sure to connect a BMS circuit and a charging circuit. Following parts are required for a safe 18650 assembly:
 - Charger: TP4056 (1A) or IP2312 (3A)

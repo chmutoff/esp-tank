@@ -4,16 +4,16 @@
 
 static uint8_t _ledc_chan;
 
-int flash_led_init(flash_led_config_t *config)
+int flash_led_init(uint8_t led_pin, uint8_t ledc_chan)
 {
-    if (ledcSetup(config->ledc_chan, FLASH_LED_PWM_FREQUENCY, FLASH_LED_PWM_RESOLUTION) == 0) // configure LED PWM channel
+    if (ledcSetup(ledc_chan, FLASH_LED_PWM_FREQUENCY, FLASH_LED_PWM_RESOLUTION) == 0) // configure LED PWM channel
     {
-        log_e("Failed to set up ledc channel %d\n", config->ledc_chan);
+        log_e("Failed to set up ledc channel %d\n", ledc_chan);
         return -1;
     }
-    ledcWrite(config->ledc_chan, 0);               // turn off by default
-    ledcAttachPin(config->pin, config->ledc_chan); // attach the GPIO pin to the channel
-    _ledc_chan = config->ledc_chan;
+    ledcWrite(ledc_chan, 0);               // turn off by default
+    ledcAttachPin(led_pin,  ledc_chan); // attach the GPIO pin to the channel
+    _ledc_chan =  ledc_chan;
     return 0;
 }
 

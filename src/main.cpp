@@ -170,11 +170,7 @@ void setup()
     init_camera();
 
     // Flash LED init
-    flash_led_config_t flash_led_config{
-        .pin = FLASH_LED_PIN,
-        .ledc_chan = FLASH_LED_LEDC_CHANNEL};
-
-    flash_led_init(&flash_led_config);
+    flash_led_init(FLASH_LED_PIN, FLASH_LED_LEDC_CHANNEL);
 
     // Motor init
     mc_motor_init(&motor_l, MOTOR_L_PIN_A, MOTOR_L_PIN_B, 500, MOTOR_L_MIN_DUTY, MCPWM_U0_O0);

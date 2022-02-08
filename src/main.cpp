@@ -1,13 +1,13 @@
 /**
- * 
+ *
  * @file main.cpp
  * @author Anton Chmutov Derevianko <sir.antoxic@gmail.com>
  * @brief The entry point of the project
- *  
+ *
  * @copyright (C) 2022 Anton Chmutov Derevianko <sir.antoxic@gmail.com>
  * This file is subject to the terms and conditions of the MIT license.
  * See the LICENSE file in the top level directory for more details.
- * 
+ *
  */
 #include <ArduinoOTA.h>
 #include <WiFi.h>
@@ -124,7 +124,7 @@ void init_ota()
 
                            // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
                            Serial.println("Start updating " + type);
-                       });
+                        });
 
     ArduinoOTA.onEnd([]()
                      { Serial.println("\nOTA end"); });
@@ -155,7 +155,7 @@ void init_ota()
                            {
                                Serial.println("End Failed");
                            }
-                       });
+                        });
 
     ArduinoOTA.begin();
     Serial.println("");
@@ -198,7 +198,7 @@ void setup()
     }
     digitalWrite(BUILTIN_LED_PIN, LOW);
     Serial.println("");
-    Serial.println("WiFi connected");
+    Serial.printf("WiFi connected. RSSI: %d\n", WiFi.RSSI());
 
     startWebServer();
 
@@ -209,7 +209,27 @@ void setup()
     init_ota();
 }
 
+int64_t last_reconnect = 0;
+bool builtin_led_status = true;
+
 void loop()
 {
     ArduinoOTA.handle();
+
+    // When WiFi is lost, reconnect every 200ms
+    if (WiFi.status() != WL_CONNECTED)
+    {
+        if (esp_timer_get_time() - last_reconnect >= 200000)
+        {
+            WiFi.reconnect();
+            digitalWrite(BUILTIN_LED_PIN, builtin_led_status);
+            builtin_led_status = !builtin_led_status;
+            Serial.print(".");
+            last_reconnect = esp_timer_get_time();
+        }
+    }
+    else
+    {
+        digitalWrite(BUILTIN_LED_PIN, LOW);
+    }
 }

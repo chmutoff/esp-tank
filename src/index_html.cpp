@@ -78,14 +78,14 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
             <div>
                 <span>H: </span>
                 <input class="slider" type="range" min="0" max="180" value="90"
-                    oninput="this.parentNode.querySelector('.tooltiptext').innerHTML = this.value + '°'; try{fetch(document.location.origin+'/aux?x='+this.value);}catch(e){}">
-                <span class="tooltiptext">90°</span>
+                    oninput="this.parentNode.querySelector('.tooltiptext').innerHTML = this.value + '&#176;'; try{fetch(document.location.origin+'/aux?x='+this.value);}catch(e){}">
+                <span class="tooltiptext">90&#176;</span>
             </div>
             <div>
                 <span>V: </span>
                 <input class="slider" type="range" min="0" max="180" value="90"
-                    oninput="this.parentNode.querySelector('.tooltiptext').innerHTML = this.value + '°'; try{fetch(document.location.origin+'/aux?y='+this.value);}catch(e){}">
-                <span class="tooltiptext">90°</span>
+                    oninput="this.parentNode.querySelector('.tooltiptext').innerHTML = this.value + '&#176;'; try{fetch(document.location.origin+'/aux?y='+this.value);}catch(e){}">
+                <span class="tooltiptext">90&#176;</span>
             </div>
         </div>
     </div>

@@ -25,7 +25,9 @@ static const char *_STREAM_BOUNDARY = "\r\n--" PART_BOUNDARY "\r\n";
 static const char *_STREAM_PART = "Content-Type: image/jpeg\r\nContent-Length: %u\r\n\r\n";
 
 httpd_handle_t stream_httpd = NULL;
-httpd_handle_t camera_httpd = NULL;
+httpd_handle_t control_httpd = NULL;
+
+int64_t last_control_request;
 
 extern mc_servo_dev_t servo_h;
 extern mc_servo_dev_t servo_v;
@@ -162,14 +164,15 @@ static esp_err_t cmd_handler(httpd_req_t *req)
             if (httpd_query_key_value(buf, "x", r_x, sizeof(r_x)) == ESP_OK &&
                 httpd_query_key_value(buf, "y", r_y, sizeof(r_y)) == ESP_OK)
             {
+                last_control_request = esp_timer_get_time();
+
                 int x = atoi(r_x);
                 int y = atoi(r_y);
 
                 mc_motor_set_speed(&motor_l, y + x);
                 mc_motor_set_speed(&motor_r, y - x);
 
-                // Serial.printf("Received x: %d, y: %d\n", x, y);
-                // Serial.printf("PWM0: %d, PWM1: %d\n", l, r);
+                // Serial.printf("Received x: %d, y: %d, l: %d, r: %d\n", x, y, y + x, y - x);
             }
             else
             {
@@ -306,12 +309,12 @@ void startWebServer()
         .user_ctx = NULL};
 
     log_i("Starting web server on port: '%d'\n", config.server_port);
-    if (httpd_start(&camera_httpd, &config) == ESP_OK)
+    if (httpd_start(&control_httpd, &config) == ESP_OK)
     {
-        httpd_register_uri_handler(camera_httpd, &index_uri);
-        httpd_register_uri_handler(camera_httpd, &js_uri);
-        httpd_register_uri_handler(camera_httpd, &cmd_uri);
-        httpd_register_uri_handler(camera_httpd, &aux_uri);
+        httpd_register_uri_handler(control_httpd, &index_uri);
+        httpd_register_uri_handler(control_httpd, &js_uri);
+        httpd_register_uri_handler(control_httpd, &cmd_uri);
+        httpd_register_uri_handler(control_httpd, &aux_uri);
     }
 
     config.server_port += 1;

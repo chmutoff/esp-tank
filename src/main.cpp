@@ -200,12 +200,21 @@ void setup()
     log_i("System ready! Use 'http://%s' to connect\n", WiFi.localIP().toString().c_str());
 }
 
+extern int64_t last_control_request;
 int64_t last_reconnect = 0;
 bool builtin_led_status = true;
 
 void loop()
 {
     ArduinoOTA.handle();
+
+    // If we don't get any control command > 200ms then we stop!
+    if (esp_timer_get_time() - last_control_request >= 200000)
+    {
+        //log_w("CTRL timeout! Stopping motors!");
+        mc_motor_set_speed(&motor_l, 0);
+        mc_motor_set_speed(&motor_r, 0);
+    }
 
     // When WiFi is lost, reconnect every 200ms
     if (WiFi.status() != WL_CONNECTED)

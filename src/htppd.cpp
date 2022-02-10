@@ -1,18 +1,17 @@
 /**
- * 
+ *
  * @file httpd.cpp
  * @author Anton Chmutov Derevianko <sir.antoxic@gmail.com>
  * @brief Web server to display the control page and process received commands
- *  
+ *
  * @copyright (C) 2022 Anton Chmutov Derevianko <sir.antoxic@gmail.com>
  * This file is subject to the terms and conditions of the MIT license.
  * See the LICENSE file in the top level directory for more details.
- * 
+ *
  */
 #include <Arduino.h>
 #include "esp_camera.h"
 #include "esp_http_server.h"
-#include "esp_timer.h"
 #include "flash_led.h"
 #include "mc_motor.h"
 #include "mc_servo.h"
@@ -36,9 +35,9 @@ extern mc_motor_dev_t motor_r;
 
 /**
  * @brief Renders the main HTML page
- * 
- * @param req 
- * @return esp_err_t 
+ *
+ * @param req
+ * @return esp_err_t
  */
 static esp_err_t index_handler(httpd_req_t *req)
 {
@@ -48,9 +47,9 @@ static esp_err_t index_handler(httpd_req_t *req)
 
 /**
  * @brief Serves joystick joy.js file
- * 
- * @param req 
- * @return esp_err_t 
+ *
+ * @param req
+ * @return esp_err_t
  */
 static esp_err_t js_handler(httpd_req_t *req)
 {
@@ -60,9 +59,9 @@ static esp_err_t js_handler(httpd_req_t *req)
 
 /**
  * @brief Serves the camera stream
- * 
- * @param req 
- * @return esp_err_t 
+ *
+ * @param req
+ * @return esp_err_t
  */
 static esp_err_t stream_handler(httpd_req_t *req)
 {
@@ -71,12 +70,6 @@ static esp_err_t stream_handler(httpd_req_t *req)
     size_t _jpg_buf_len = 0;
     uint8_t *_jpg_buf = NULL;
     char *part_buf[64];
-
-    static int64_t last_frame = 0;
-    if (!last_frame)
-    {
-        last_frame = esp_timer_get_time();
-    }
 
     res = httpd_resp_set_type(req, _STREAM_CONTENT_TYPE);
     if (res != ESP_OK)
@@ -91,7 +84,7 @@ static esp_err_t stream_handler(httpd_req_t *req)
         fb = esp_camera_fb_get();
         if (!fb)
         {
-            Serial.println("Camera capture failed");
+            log_e("Camera capture failed");
             res = ESP_FAIL;
         }
         else if (fb->format != PIXFORMAT_JPEG)
@@ -101,7 +94,7 @@ static esp_err_t stream_handler(httpd_req_t *req)
             fb = NULL;
             if (!jpeg_converted)
             {
-                Serial.println("JPEG compression failed");
+                log_e("JPEG compression failed");
                 res = ESP_FAIL;
             }
         }
@@ -139,16 +132,14 @@ static esp_err_t stream_handler(httpd_req_t *req)
             break;
         }
     }
-
-    last_frame = 0;
     return res;
 }
 
 /**
  * @brief Handles tank control x and y axis and generates PWM output on the motors
- * 
- * @param req 
- * @return esp_err_t 
+ *
+ * @param req
+ * @return esp_err_t
  */
 static esp_err_t cmd_handler(httpd_req_t *req)
 {
@@ -177,8 +168,8 @@ static esp_err_t cmd_handler(httpd_req_t *req)
                 mc_motor_set_speed(&motor_l, y + x);
                 mc_motor_set_speed(&motor_r, y - x);
 
-                //Serial.printf("Received x: %d, y: %d\n", x, y);
-                //Serial.printf("PWM0: %d, PWM1: %d\n", l, r);
+                // Serial.printf("Received x: %d, y: %d\n", x, y);
+                // Serial.printf("PWM0: %d, PWM1: %d\n", l, r);
             }
             else
             {
@@ -207,9 +198,9 @@ static esp_err_t cmd_handler(httpd_req_t *req)
 
 /**
  * @brief Handles auxiliary equipment on the tank (LED and camera servos)
- * 
- * @param req 
- * @return esp_err_t 
+ *
+ * @param req
+ * @return esp_err_t
  */
 static esp_err_t aux_handler(httpd_req_t *req)
 {
@@ -230,33 +221,40 @@ static esp_err_t aux_handler(httpd_req_t *req)
             if (httpd_query_key_value(buf, "led", val_buf, sizeof(val_buf)) == ESP_OK)
             {
                 int led = atoi(val_buf);
-                Serial.printf("Received led: %d\n", led);
+                log_v("Received led: %d\n", led);
                 flash_led_set_brightness(led);
             }
             else if (httpd_query_key_value(buf, "x", val_buf, sizeof(val_buf)) == ESP_OK)
             {
                 int angle_h = atoi(val_buf);
-                Serial.printf("Servo horizontal: %d\n", angle_h);
-                mc_servo_set_angle(&servo_h, angle_h);                
+                log_v("Servo horizontal: %d\n", angle_h);
+                mc_servo_set_angle(&servo_h, angle_h);
             }
             else if (httpd_query_key_value(buf, "y", val_buf, sizeof(val_buf)) == ESP_OK)
             {
                 int angle_v = atoi(val_buf);
-                Serial.printf("Servo vertical: %d\n", angle_v);
+                log_v("Servo vertical: %d\n", angle_v);
                 mc_servo_set_angle(&servo_v, angle_v);
+            }
+            else if (httpd_query_key_value(buf, "framesize", val_buf, sizeof(val_buf)) == ESP_OK)
+            {
+                int val = atoi(val_buf);
+                sensor_t *s = esp_camera_sensor_get();
+                s->set_framesize(s, (framesize_t)val);
             }
             else
             {
-                Serial.println("Wrong request!");
+                log_e("Wrong request!");
+                httpd_resp_send_404(req);
+                return ESP_FAIL;
             }
-
-        } /*
+        }
         else
         {
             free(buf);
             httpd_resp_send_404(req);
             return ESP_FAIL;
-        }*/
+        }
         free(buf);
     }
     else
@@ -271,7 +269,7 @@ static esp_err_t aux_handler(httpd_req_t *req)
 
 /**
  * @brief Creates 2 web servers. One for camera stream and the other for tank control
- * 
+ *
  */
 void startWebServer()
 {
@@ -307,7 +305,7 @@ void startWebServer()
         .handler = stream_handler,
         .user_ctx = NULL};
 
-    Serial.printf("Starting web server on port: '%d'\n", config.server_port);
+    log_i("Starting web server on port: '%d'\n", config.server_port);
     if (httpd_start(&camera_httpd, &config) == ESP_OK)
     {
         httpd_register_uri_handler(camera_httpd, &index_uri);
@@ -318,7 +316,7 @@ void startWebServer()
 
     config.server_port += 1;
     config.ctrl_port += 1;
-    Serial.printf("Starting stream server on port: '%d'\n", config.server_port);
+    log_i("Starting stream server on port: '%d'\n", config.server_port);
     if (httpd_start(&stream_httpd, &config) == ESP_OK)
     {
         httpd_register_uri_handler(stream_httpd, &stream_uri);

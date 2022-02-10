@@ -33,7 +33,7 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
             height: 300px;
             margin: auto;
         }
-        #joy1Div {
+        #joy1-container {
             width: 300px;
             height: 300px;
             margin: 10px auto;
@@ -60,15 +60,34 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
 
 <body>
     <div id="main">
+        <div class="framesize-container">  
+            <label for="framesize">Resolution</label>
+            <select id="framesize" onchange="try{fetch(document.location.origin+'/aux?framesize='+this.value);}catch(e){}">
+                <option value="13">UXGA (1600x1200)</option>
+                <option value="12">SXGA (1280x1024)</option>
+                <option value="11">HD (1280x720)</option>
+                <option value="10">XGA (1024x768)</option>
+                <option value="9">SVGA (800x600)</option>
+                <option value="8">VGA (640x480)</option>
+                <option value="7">HVGA (480x320)</option>
+                <option value="6">CIF (400x296)</option>
+                <option value="5">QVGA (320x240)</option>
+                <option value="4">240X240 (240X240)</option>
+                <option value="3">HQVGA (240x176)</option>
+                <option value="2">QCIF (176x144)</option>
+                <option value="1">QQVGA (160x120)</option>
+                <option value="0">96x96 (96x96)</option>
+            </select>
+        </div>
         <img src="" id="photo">
-        <div id="joy1Div"></div>
-        <div id="joy1DivInfo">
+        <div id="joy1-container"></div>
+        <div id="joy1-info-container">
             <label for="joy1X">X1</label>
             <input id="joy1X" type="text" disabled /></br>
             <label for="joy1Y">Y1</label>
             <input id="joy1Y" type="text" disabled />
         </div>
-        <div id="slidercontainer">
+        <div id="slider-container">
             <div>
                 <span>F: </span>
                 <input class="slider" type="range" min="0" max="100" value="0"
@@ -91,7 +110,7 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
     </div>
     <script src="joy.js"></script>
     <script>
-        var Joy1 = new JoyStick('joy1Div', { "title": "joystick1", "autoReturnToCenter": true, internalFillColor: "DarkGoldenRod", internalStrokeColor: "black", externalStrokeColor: "DarkGoldenRod" });
+        var Joy1 = new JoyStick('joy1-container', { "title": "joystick1", "autoReturnToCenter": true, internalFillColor: "DarkGoldenRod", internalStrokeColor: "black", externalStrokeColor: "DarkGoldenRod" });
         var joy1X = document.getElementById("joy1X");
         var joy1Y = document.getElementById("joy1Y");
 

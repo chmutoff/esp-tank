@@ -73,6 +73,6 @@ esp_err_t mc_motor_advanced_init(mc_motor_dev_t *dev, mc_motor_config_t *config)
  * @return                   ESP_OK on success
  * @return                   ESP_ERR_INVALID_ARG if the angle exceeds the limit
  */
-esp_err_t mc_motor_set_speed(mc_motor_dev_t *dev, int8_t speed);
+esp_err_t mc_motor_set_speed(mc_motor_dev_t *dev, int16_t speed);
 
 #endif /* __MC_MOTOR_H */

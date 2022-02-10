@@ -73,7 +73,7 @@ void init_camera()
     esp_err_t err = esp_camera_init(&config);
     if (err != ESP_OK)
     {
-        Serial.printf("Camera init failed with error 0x%x", err);
+        log_e("Camera init failed with error 0x%x", err);
         return;
     }
 
@@ -101,7 +101,7 @@ void init_ota()
     ArduinoOTA.setHostname(host_name);
 
     // No authentication by default
-    //ArduinoOTA.setPassword("admin");
+    // ArduinoOTA.setPassword("admin");
 
     // Password can be set with it's md5 value as well
     // MD5(admin) = 21232f297a57a5a743894a0e4a801fc3
@@ -120,18 +120,17 @@ void init_ota()
                            }
 
                            // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
-                           Serial.println("Start updating " + type);
-                        });
+                           log_i("Start updating %s", type); });
 
     ArduinoOTA.onEnd([]()
-                     { Serial.println("\nOTA end"); });
+                     { log_i("\nOTA end"); });
 
     ArduinoOTA.onProgress([](unsigned int progress, unsigned int total)
-                          { Serial.printf("Progress: %u%%\r", (progress / (total / 100))); });
+                          { log_i("Progress: %u%%\r", (progress / (total / 100))); });
 
     ArduinoOTA.onError([](ota_error_t error)
                        {
-                           Serial.printf("Error[%u]: ", error);
+                           log_e("Error[%u]: ", error);
                            if (error == OTA_AUTH_ERROR)
                            {
                                Serial.println("Auth Failed");
@@ -151,17 +150,15 @@ void init_ota()
                            else if (error == OTA_END_ERROR)
                            {
                                Serial.println("End Failed");
-                           }
-                        });
+                           } });
 
     ArduinoOTA.begin();
-    Serial.println("");
-    Serial.println("OTA initialized");
+    log_i("OTA initialized\n");
 }
 
 void setup()
 {
-    WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
+    WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); // disable brownout detector
     Serial.begin(115200);
 
     init_camera();
@@ -180,31 +177,27 @@ void setup()
     mc_servo_set_angle(&servo_v, 90);
 
     WiFi.setHostname(host_name);
+    WiFi.enableSTA(true);
     WiFi.begin(wifi_ssid, wifi_pass);
 
-    Serial.printf("Connecting to Wifi \"%s\"\n", wifi_ssid);
+    log_i("Connecting to Wifi \"%s\"\n", wifi_ssid);
 
     pinMode(BUILTIN_LED_PIN, OUTPUT);
-
     while (WiFi.status() != WL_CONNECTED)
     {
         digitalWrite(BUILTIN_LED_PIN, LOW);
         delay(200);
         digitalWrite(BUILTIN_LED_PIN, HIGH);
         delay(200);
-        Serial.print(".");
     }
     digitalWrite(BUILTIN_LED_PIN, LOW);
-    Serial.println("");
-    Serial.printf("WiFi connected. RSSI: %d\n", WiFi.RSSI());
+
+    log_i("WiFi connected. RSSI: %d\n", WiFi.RSSI());
 
     startWebServer();
-
-    Serial.print("Camera Ready! Use 'http://");
-    Serial.print(WiFi.localIP());
-    Serial.println("' to connect");
-
     init_ota();
+
+    log_i("System ready! Use 'http://%s' to connect\n", WiFi.localIP().toString().c_str());
 }
 
 int64_t last_reconnect = 0;
@@ -222,7 +215,6 @@ void loop()
             WiFi.reconnect();
             digitalWrite(BUILTIN_LED_PIN, builtin_led_status);
             builtin_led_status = !builtin_led_status;
-            Serial.print(".");
             last_reconnect = esp_timer_get_time();
         }
     }

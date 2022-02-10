@@ -18,10 +18,12 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {
-            font-family: Arial;
+            font-family: sans-serif;
             text-align: center;
             margin: 0px auto;
             padding-top: 30px;
+            background: #252525;
+            color: #eaeaea;
         }
         img {
             width: auto;
@@ -29,17 +31,17 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
             height: auto;
         }
         #main {
-            width: 300px;
+            width: 320px;
             height: 300px;
             margin: auto;
         }
         #joy1-container {
-            width: 300px;
-            height: 300px;
+            width: 320px;
+            height: 320px;
             margin: 10px auto;
         }
         #joystick1 {
-            border: 2px solid DarkGoldenRod;
+            border: 2px solid #eaeaea;
         }
         .slider {
             display: inline-block;
@@ -71,7 +73,7 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
                 <option value="8">VGA (640x480)</option>
                 <option value="7">HVGA (480x320)</option>
                 <option value="6">CIF (400x296)</option>
-                <option value="5">QVGA (320x240)</option>
+                <option value="5" selected>QVGA (320x240)</option>
                 <option value="4">240X240 (240X240)</option>
                 <option value="3">HQVGA (240x176)</option>
                 <option value="2">QCIF (176x144)</option>
@@ -110,7 +112,7 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
     </div>
     <script src="joy.js"></script>
     <script>
-        var Joy1 = new JoyStick('joy1-container', { "title": "joystick1", "autoReturnToCenter": true, internalFillColor: "DarkGoldenRod", internalStrokeColor: "black", externalStrokeColor: "DarkGoldenRod" });
+        var Joy1 = new JoyStick('joy1-container', { "title": "joystick1", "autoReturnToCenter": true, internalFillColor: "darkred", internalStrokeColor: "black", externalStrokeColor: "darkred" });
         var joy1X = document.getElementById("joy1X");
         var joy1Y = document.getElementById("joy1Y");
 

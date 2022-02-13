@@ -224,19 +224,19 @@ static esp_err_t aux_handler(httpd_req_t *req)
             if (httpd_query_key_value(buf, "led", val_buf, sizeof(val_buf)) == ESP_OK)
             {
                 int led = atoi(val_buf);
-                log_v("Received led: %d\n", led);
+                log_v("Received led: %d", led);
                 flash_led_set_brightness(led);
             }
             else if (httpd_query_key_value(buf, "x", val_buf, sizeof(val_buf)) == ESP_OK)
             {
                 int angle_h = atoi(val_buf);
-                log_v("Servo horizontal: %d\n", angle_h);
+                log_v("Servo horizontal: %d", angle_h);
                 mc_servo_set_target(&servo_h, angle_h);
             }
             else if (httpd_query_key_value(buf, "y", val_buf, sizeof(val_buf)) == ESP_OK)
             {
                 int angle_v = atoi(val_buf);
-                log_v("Servo vertical: %d\n", angle_v);
+                log_v("Servo vertical: %d", angle_v);
                 mc_servo_set_target(&servo_v, angle_v);
             }
             else if (httpd_query_key_value(buf, "framesize", val_buf, sizeof(val_buf)) == ESP_OK)
@@ -308,7 +308,7 @@ void startWebServer()
         .handler = stream_handler,
         .user_ctx = NULL};
 
-    log_i("Starting web server on port: '%d'\n", config.server_port);
+    log_i("Starting web server on port: '%d'", config.server_port);
     if (httpd_start(&control_httpd, &config) == ESP_OK)
     {
         httpd_register_uri_handler(control_httpd, &index_uri);
@@ -319,7 +319,7 @@ void startWebServer()
 
     config.server_port += 1;
     config.ctrl_port += 1;
-    log_i("Starting stream server on port: '%d'\n", config.server_port);
+    log_i("Starting stream server on port: '%d'", config.server_port);
     if (httpd_start(&stream_httpd, &config) == ESP_OK)
     {
         httpd_register_uri_handler(stream_httpd, &stream_uri);

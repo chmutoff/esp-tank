@@ -123,7 +123,7 @@ void init_ota()
                            log_i("Start updating %s", type); });
 
     ArduinoOTA.onEnd([]()
-                     { log_i("\nOTA end"); });
+                     { log_i("OTA end"); });
 
     ArduinoOTA.onProgress([](unsigned int progress, unsigned int total)
                           { log_i("Progress: %u%%\r", (progress / (total / 100))); });
@@ -153,7 +153,7 @@ void init_ota()
                            } });
 
     ArduinoOTA.begin();
-    log_i("OTA initialized\n");
+    log_i("OTA initialized");
 }
 
 void setup()
@@ -178,7 +178,7 @@ void setup()
     WiFi.enableSTA(true);
     WiFi.begin(wifi_ssid, wifi_pass);
 
-    log_i("Connecting to Wifi \"%s\"\n", wifi_ssid);
+    log_i("Connecting to Wifi \"%s\"", wifi_ssid);
 
     pinMode(BUILTIN_LED_PIN, OUTPUT);
     while (WiFi.status() != WL_CONNECTED)
@@ -190,12 +190,12 @@ void setup()
     }
     digitalWrite(BUILTIN_LED_PIN, LOW);
 
-    log_i("WiFi connected. RSSI: %d\n", WiFi.RSSI());
+    log_i("WiFi connected. RSSI: %d", WiFi.RSSI());
 
     startWebServer();
     init_ota();
 
-    log_i("System ready! Use 'http://%s' to connect\n", WiFi.localIP().toString().c_str());
+    log_i("System ready! Use 'http://%s' to connect", WiFi.localIP().toString().c_str());
 }
 
 extern int64_t last_control_request;
@@ -210,7 +210,6 @@ void loop()
     // If we don't get any control command > 200ms then we stop!
     if (esp_timer_get_time() - last_control_request >= 200000)
     {
-        //log_w("CTRL timeout! Stopping motors!");
         mc_motor_set_speed(&motor_l, 0);
         mc_motor_set_speed(&motor_r, 0);
     }

@@ -1,13 +1,13 @@
 /**
- * 
+ *
  * @file mc_servo.h
  * @author Anton Chmutov Derevianko <sir.antoxic@gmail.com>
  * @brief Header of mc_servo library
- *  
+ *
  * @copyright (C) 2022 Anton Chmutov Derevianko <sir.antoxic@gmail.com>
  * This file is subject to the terms and conditions of the MIT license.
  * See the LICENSE file in the top level directory for more details.
- * 
+ *
  */
 #include "driver/mcpwm.h"
 
@@ -57,7 +57,7 @@ typedef enum
 
 /**
  * @brief Initialization of MCPWM output to control a servo
- * 
+ *
  * @param[out] dev                  servo device to be initialized
  * @param[in]  pin                  servo data pin
  * @param[in]  min_pulse_duration   Minimum pulse width in microseconds
@@ -71,7 +71,7 @@ esp_err_t mc_servo_init(mc_servo_dev_t *dev, uint8_t pin, uint16_t min_pulse_dur
 
 /**
  * @brief Initialization of MCPWM output to control a servo
- * 
+ *
  * @param[out] dev    servo device to be initialized
  * @param[in]  config configuration parameters
  * @return                   ESP_OK on success
@@ -80,7 +80,7 @@ esp_err_t mc_servo_advanced_init(mc_servo_dev_t *dev, mc_servo_config_t *config)
 
 /**
  * @brief Set an angle between 0 and configured max_angle of a servo.
- * 
+ *
  * @param[in] dev    servo device to set the angle
  * @param[in] config configuration parameters
  * @return                   ESP_OK on success

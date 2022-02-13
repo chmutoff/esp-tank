@@ -231,13 +231,13 @@ static esp_err_t aux_handler(httpd_req_t *req)
             {
                 int angle_h = atoi(val_buf);
                 log_v("Servo horizontal: %d\n", angle_h);
-                mc_servo_set_angle(&servo_h, angle_h);
+                mc_servo_set_target(&servo_h, angle_h);
             }
             else if (httpd_query_key_value(buf, "y", val_buf, sizeof(val_buf)) == ESP_OK)
             {
                 int angle_v = atoi(val_buf);
                 log_v("Servo vertical: %d\n", angle_v);
-                mc_servo_set_angle(&servo_v, angle_v);
+                mc_servo_set_target(&servo_v, angle_v);
             }
             else if (httpd_query_key_value(buf, "framesize", val_buf, sizeof(val_buf)) == ESP_OK)
             {

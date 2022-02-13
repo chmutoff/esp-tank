@@ -171,10 +171,8 @@ void setup()
     mc_motor_init(&motor_r, MOTOR_R_PIN_A, MOTOR_R_PIN_B, 500, MOTOR_R_MIN_DUTY, MCPWM_U0_O1);
 
     // Servo init
-    mc_servo_init(&servo_h, SERVO_H_PIN, SERVO_H_MIN_PULSEWIDTH_US, SERVO_H_MAX_PULSEWIDTH_US, SERVO_H_MAX_DEGREE, MCPWM_U0_A2);
-    mc_servo_init(&servo_v, SERVO_V_PIN, SERVO_V_MIN_PULSEWIDTH_US, SERVO_V_MAX_PULSEWIDTH_US, SERVO_V_MAX_DEGREE, MCPWM_U0_B2);
-    mc_servo_set_angle(&servo_h, 90);
-    mc_servo_set_angle(&servo_v, 90);
+    mc_servo_init(&servo_h, SERVO_H_PIN, SERVO_H_MIN_PULSEWIDTH_US, SERVO_H_MAX_PULSEWIDTH_US, SERVO_H_MAX_DEGREE, MCPWM_U0_A2, 90);
+    mc_servo_init(&servo_v, SERVO_V_PIN, SERVO_V_MIN_PULSEWIDTH_US, SERVO_V_MAX_PULSEWIDTH_US, SERVO_V_MAX_DEGREE, MCPWM_U0_B2, 90);
 
     WiFi.setHostname(host_name);
     WiFi.enableSTA(true);
@@ -202,6 +200,7 @@ void setup()
 
 extern int64_t last_control_request;
 int64_t last_reconnect = 0;
+int64_t last_servo_move = 0;
 bool builtin_led_status = true;
 
 void loop()
@@ -230,5 +229,14 @@ void loop()
     else
     {
         digitalWrite(BUILTIN_LED_PIN, LOW);
+    }
+
+    // Smoothly move servos to target position
+    if (esp_timer_get_time() - last_servo_move >= 20000) // 20ms
+    {
+        mc_servo_move_to_target(&servo_h);
+        mc_servo_move_to_target(&servo_v);
+
+        last_servo_move = esp_timer_get_time();
     }
 }

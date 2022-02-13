@@ -9,11 +9,12 @@
  * See the LICENSE file in the top level directory for more details.
  *
  */
+#include <Arduino.h>
 #include "mc_servo.h"
 
 #define MC_SERVO_MCPWM_DUTY_MODE MCPWM_DUTY_MODE_0
 
-esp_err_t mc_servo_init(mc_servo_dev_t *dev, uint8_t pin, uint16_t min_pulse_duration, uint16_t max_pulse_duration, uint16_t max_angle, mc_servo_output_t output)
+esp_err_t mc_servo_init(mc_servo_dev_t *dev, uint8_t pin, uint16_t min_pulse_duration, uint16_t max_pulse_duration, uint16_t max_angle, mc_servo_output_t output, uint8_t init_angle)
 {
     mc_servo_config_t config = {
         .pin = pin,
@@ -24,6 +25,7 @@ esp_err_t mc_servo_init(mc_servo_dev_t *dev, uint8_t pin, uint16_t min_pulse_dur
         .mcpwm_io_signal = mcpwm_io_signals_t(output % 6),
         .mcpwm_timer_num = mcpwm_timer_t((output / 2) % 3),
         .mcpwm_op_num = mcpwm_operator_t(output % 2),
+        .init_angle = init_angle,
     };
 
     return mc_servo_advanced_init(dev, &config);
@@ -49,15 +51,20 @@ esp_err_t mc_servo_advanced_init(mc_servo_dev_t *dev, mc_servo_config_t *config)
     dev->mcpwm_timer_num = config->mcpwm_timer_num;
     dev->mcpwm_op_num = config->mcpwm_op_num;
 
+    dev->_current_pos = config->init_angle;
+    dev->_target_pos = config->init_angle;
+
+    mc_servo_set_angle(dev, config->init_angle);
+
     return ESP_OK;
 }
 
-static inline uint32_t convert_servo_angle_to_duty_us(mc_servo_dev_t *dev, int angle)
+static inline uint32_t convert_servo_angle_to_duty_us(mc_servo_dev_t *dev, uint8_t angle)
 {
     return angle * ((dev->max_pulse_duration - dev->min_pulse_duration) / dev->max_angle) + dev->min_pulse_duration;
 }
 
-esp_err_t mc_servo_set_angle(mc_servo_dev_t *dev, int angle)
+esp_err_t mc_servo_set_angle(mc_servo_dev_t *dev, uint8_t angle)
 {
     if (angle < 0 || angle > dev->max_angle)
     {
@@ -66,4 +73,25 @@ esp_err_t mc_servo_set_angle(mc_servo_dev_t *dev, int angle)
     ESP_ERROR_CHECK(mcpwm_set_duty_in_us(dev->mcpwm_unit_num, dev->mcpwm_timer_num, dev->mcpwm_op_num, convert_servo_angle_to_duty_us(dev, angle)));
     // ESP_ERROR_CHECK(mcpwm_set_duty_type(dev->mcpwm_unit_num, dev->mcpwm_timer_num, dev->mcpwm_op_num, MC_SERVO_MCPWM_DUTY_MODE));
     return ESP_OK;
+}
+
+void mc_servo_set_target(mc_servo_dev_t *dev, uint8_t angle)
+{
+    dev->_target_pos = angle;
+}
+
+bool mc_servo_move_to_target(mc_servo_dev_t *dev)
+{
+    int err = abs(dev->_target_pos - dev->_current_pos);
+    if (err > 0.01)
+    {
+      dev->_current_pos = (dev->_target_pos * 0.05) + (dev->_current_pos * 0.95);
+      // Serial.printf("target %d, current %f\n", dev->_targetPos, dev->_currentPos);
+      mc_servo_set_angle(dev, (uint8_t)dev->_current_pos);
+      return false;
+    }
+    else
+    {
+        return true;
+    }
 }

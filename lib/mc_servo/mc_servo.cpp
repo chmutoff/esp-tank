@@ -1,13 +1,13 @@
 /**
- * 
+ *
  * @file mc_servo.cpp
  * @author Anton Chmutov Derevianko <sir.antoxic@gmail.com>
  * @brief Library to control a servo motor using ESP32 MCPWM
- *  
+ *
  * @copyright (C) 2022 Anton Chmutov Derevianko <sir.antoxic@gmail.com>
  * This file is subject to the terms and conditions of the MIT license.
  * See the LICENSE file in the top level directory for more details.
- * 
+ *
  */
 #include "mc_servo.h"
 
@@ -59,10 +59,11 @@ static inline uint32_t convert_servo_angle_to_duty_us(mc_servo_dev_t *dev, int a
 
 esp_err_t mc_servo_set_angle(mc_servo_dev_t *dev, int angle)
 {
-    if (angle < 0 || angle > dev->max_angle) {
+    if (angle < 0 || angle > dev->max_angle)
+    {
         return ESP_ERR_INVALID_ARG;
     }
     ESP_ERROR_CHECK(mcpwm_set_duty_in_us(dev->mcpwm_unit_num, dev->mcpwm_timer_num, dev->mcpwm_op_num, convert_servo_angle_to_duty_us(dev, angle)));
-    //ESP_ERROR_CHECK(mcpwm_set_duty_type(dev->mcpwm_unit_num, dev->mcpwm_timer_num, dev->mcpwm_op_num, MC_SERVO_MCPWM_DUTY_MODE));
+    // ESP_ERROR_CHECK(mcpwm_set_duty_type(dev->mcpwm_unit_num, dev->mcpwm_timer_num, dev->mcpwm_op_num, MC_SERVO_MCPWM_DUTY_MODE));
     return ESP_OK;
 }

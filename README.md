@@ -46,3 +46,9 @@ build_flags =
 ```
 ## Testing
 This project has 3 tests, one for verifying the flash led, another one to check the motors and the last one to check that servos are working fine.
+Run tests one by one
+```
+pio test -e esp32cam-serial -f test_flash_led
+pio test -e esp32cam-serial -f test_mc_servo
+pio test -e esp32cam-serial -f test_mc_motor
+```

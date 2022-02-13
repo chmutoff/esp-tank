@@ -17,8 +17,11 @@
 #include "flash_led.h"
 #include "mc_motor.h"
 #include "mc_servo.h"
-#include "soc/soc.h"          // disable brownout problems
-#include "soc/rtc_cntl_reg.h" // disable brownout problems
+
+#ifdef DISABLE_BROWNOUT_DETECTION
+#include "soc/soc.h"
+#include "soc/rtc_cntl_reg.h"
+#endif
 
 mc_motor_dev_t motor_l;
 mc_motor_dev_t motor_r;
@@ -158,7 +161,9 @@ void init_ota()
 
 void setup()
 {
+#ifdef DISABLE_BROWNOUT_DETECTION
     WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); // disable brownout detector
+#endif
     Serial.begin(115200);
 
     init_camera();

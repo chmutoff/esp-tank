@@ -25,7 +25,7 @@ mc_motor_dev_t motor_r;
 mc_servo_dev_t servo_h;
 mc_servo_dev_t servo_v;
 
-void startWebServer();
+void start_web_server();
 
 void init_camera()
 {
@@ -192,7 +192,7 @@ void setup()
 
     log_i("WiFi connected. RSSI: %d", WiFi.RSSI());
 
-    startWebServer();
+    start_web_server();
     init_ota();
 
     log_i("System ready! Use 'http://%s' to connect", WiFi.localIP().toString().c_str());

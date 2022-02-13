@@ -274,7 +274,7 @@ static esp_err_t aux_handler(httpd_req_t *req)
  * @brief Creates 2 web servers. One for camera stream and the other for tank control
  *
  */
-void startWebServer()
+void start_web_server()
 {
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
 
@@ -323,5 +323,17 @@ void startWebServer()
     if (httpd_start(&stream_httpd, &config) == ESP_OK)
     {
         httpd_register_uri_handler(stream_httpd, &stream_uri);
+    }
+}
+
+void stop_web_server()
+{
+    if (control_httpd != NULL)
+    {
+        httpd_stop(control_httpd);
+    }
+    if (stream_httpd != NULL)
+    {
+        httpd_stop(stream_httpd);
     }
 }

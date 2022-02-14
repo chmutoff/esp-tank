@@ -40,13 +40,14 @@ When using 18650 batteries in series make sure to connect a BMS circuit and a ch
 
 ### 3. Motor drivers
 
-| Model  | Current        | Voltage     | Notes                                               |
-|---     |---             |---          | ---                                                 |
-| L298N  | 1A Max: 2A     | 4 - 50V     | Big voltage drop, high temperature, low efficiency. |
-| TA6586 | 5A Max: 7A     | 3 - 14V     | Good specs. Hard do find.                           |
-| MX1508 | 1.5A Max: 2.5A | 2 - 9.6V    | Max voltage is 10V!                                 |
-| L9110S | 0.8A Max: 1.5A | 2.5 - 12V   | Sometimes they suddenly burn out!                   |
-| TB6612 | 1.2A Max: 3A   | 4.5 - 13.5V | Connect STBY, PWMA, PWMB to VCC pin.                |
+| Model   | Current        | Voltage     | Notes                                               |
+|---      |---             |---          | ---                                                 |
+| L298N   | 1A Max: 2A     | 4 - 50V     | Big voltage drop, high temperature, low efficiency. |
+| TA6586  | 5A Max: 7A     | 3 - 14V     | Good specs. Hard do find.                           |
+| MX1508  | 1.5A Max: 2.5A | 2 - 9.6V    | Max voltage is 10V!                                 |
+| DRV8833 | 1.5A Max: 2.5A | 2.7 - 10.8V | Max voltage is 10.8V!                               |
+| L9110S  | 0.8A Max: 1.5A | 2.5 - 12V   | Sometimes, they suddenly burn out!                  |
+| TB6612  | 1.2A Max: 3A   | 4.5 - 13.5V | Connect STBY, PWMA, PWMB to VCC pin.                |
 
 **NOTE**: It is recommended to put a 100nf (0.1uF) capacitor between the motor contacts to avoid interference.
 

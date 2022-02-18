@@ -13,6 +13,7 @@ The ESP TANK project is designed to be used with any custom combination of chass
 ![img](img/car-chassis.png)
 
 Choose one of the following chassis configurations
+
 | Chassis | IN V | Motor    | Motor V     | ESP & Servo V |
 |---      |---   |---       |---          |---            |
 | TP100   | 12V  | 33GB-520 | 12V direct  | 5V Step Down  | 

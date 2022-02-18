@@ -20,13 +20,11 @@ Choose one of the following chassis configurations
 | 4WD Kit | 3.7V | TT motor | 6V Step UP  | 5V Step UP    |
 
 ### Battery
-- 12V battery or 3x 18650 in paralell. 
-- Multple 18650 in series. Output: 3.7V. It is possible to install USB charging on chassis and BMS circuit should also be installed.
-  - BMS: 1S-3876 (5A)
-  - Charger: TP4056 (1A) or IP2312 (3A)
+- 12V LiPo battery or 3x 18650 in paralell. 
+- Multple 3.7V 18650 in series:
+  - BMS: 1S-3876 (5A). Battery protection, MUST be installed for safety!
+  - Charger: TP4056 (1A) or IP2312 (3A). Optional, to charge the batteries on-board with a USB cable. In case of TP405, choose the version without integrated BMS or it will constantly turn off the power due to high starting current of the motors!
   - 18650 battery holder. TP100 chassis can fit 3x batteries underneeth. Car chassis can fit 2x between motors or more batteries on the top.
-
-**NOTE:** in case of TP405, choose the version without integrated BMS or it will constantly turn off the power due to high starting current of the motors!
 
 ### Step-UP (boost) converters 
 
@@ -59,14 +57,23 @@ Choose one of the following chassis configurations
 ### Servos
 The two types of servos are: 
 - SG90: micro servo motor with plastic gears
-- MG90: micro servo motor with metal gears
+- MG90: micro servo motor with metal gears (better)
 
 Both servos need a 5V power supply. To attach a servo use standard servo pan/tilt mount with this [3D printed clip](https://www.thingiverse.com/thing:4934734)
 
 ### Main board
 At the moment, the only tested board is [ESP32-CAM by AiThinker](http://www.ai-thinker.com/pro_view-24.html)
 
-## Examples:
+## Schematics:
+### TP100 with 12V battery and step down converter for ESP32 and servos.
+
+
+### TP100 with 18650 in series (3.7V), step up converter for motor driver and step up converter for ESP32 and servos.
+
+
+### 4WD kit with 18650 in series (3.7V), step up converter for motor driver and step up converter for ESP32 and servos.
+
+
 ### Using 18650 in series and 4 pin motor driver
 This is the easiest solution. Because the battery voltage is below 5V we need a 5V step up converter to power the servos, another 5V to power the ESP32-CAM board and one  between 6-12V depending on the selected motor type.
 ![img](img/Sketch_18650_2PIN_DRV_bb.png)

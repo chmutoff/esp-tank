@@ -1,5 +1,11 @@
 # ESP Tank
+
 This project allows to control any chassis with fixed wheels (like TP100 mini tank chassis or the famous 4wd chassis) using ESP32-CAM.
+
+Some of the advantages:
+- The chassis is controlled with a virtual joystick 
+- It is possible to set the onboard flash led brightness
+- Smooth camera control (up/down and left/right)
 
 ## Assembly
 Connect the motor controller and two servos

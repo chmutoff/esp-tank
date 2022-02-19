@@ -14,11 +14,11 @@ The ESP TANK project is designed to be used with any custom combination of chass
 
 Choose one of the following chassis configurations
 
-| Chassis | IN V | Motor    | Motor V     | ESP & Servo V |
-|---      |---   |---       |---          |---            |
-| TP100   | 12V  | 33GB-520 | 12V direct  | 5V Step Down  | 
-| TP100   | 3.7V | 33GB-520 | 12V Step UP | 5V Step UP    |
-| 4WD Kit | 3.7V | TT motor | 6V Step UP  | 5V Step UP    |
+| Chassis | IN V | Motor Voltage      | ESP & Servo Voltage    |
+|---      |---   |---                 |---            |
+| TP100   | 12V  | 12V direct         | 5V Step Down MP1584EN  | 
+| TP100   | 3.7V | 12V Step UP MT3608 | 5V Step UP MT3608      |
+| 4WD Kit | 3.7V | 6V Step UP MT3608  | 5V Step UP MT3608      |
 
 ### Battery
 - 12V LiPo battery or 3x 18650 in paralell. 
@@ -29,18 +29,18 @@ Choose one of the following chassis configurations
 
 ### Step-UP (boost) converters 
 
-| Model    | Current        | In Voltage   | Out Voltage   | Notes             
-|---       |---             |---           |---            |---                        |
-| SX1308   | 2A             | 2 - 24V      | 2 - 28V       | Small and powerful        |
-| MT3608   | 2A             | 2 - 24V      | 5 - 28V       |                           |
+| Model    | Current        | In Voltage   | Out Voltage   |
+|---       |---             |---           |---            |
+| SX1308   | 2A             | 2 - 24V      | 2 - 28V       |
+| MT3608   | 2A             | 2 - 24V      | 5 - 28V       |
 
 ### Step-down (buck) converters 
 
-| Model    | Current        | In Voltage   | Out Voltage   | Notes                     |
-|---       |---             |---           |---            |---                        |
-| MP1584EN | 3A             | 4.5 - 28V    | 0.8 - 20V     | Small and powerful        |
-| MP2315   | 1.5-2A         | 4.5 - 24V    | 0.8 - 22V     | Tiny and powerful module  |
-| LM2596   | 3A             | 4.5 - 40V    | 1.23 - 37V    | Overpowered. Big size.    |
+| Model    | Current        | In Voltage   | Out Voltage   |
+|---       |---             |---           |---            |
+| MP1584EN | 3A             | 4.5 - 28V    | 0.8 - 20V     |
+| MP2315   | 1.5-2A         | 4.5 - 24V    | 0.8 - 22V     |
+| LM2596   | 3A             | 4.5 - 40V    | 1.23 - 37V    |
 
 ### Motor drivers
 

@@ -15,7 +15,7 @@
 - [ESP32-CAM by AiThinker](http://www.ai-thinker.com/pro_view-24.html)
 
 ## Schematic
-TODO: add schematic
+![img](img/Sketch_18650_2PIN_DRV_bb.png)
 
 ## Assembly
 To attach a servo use standard servo pan/tilt mount with this [3D printed clip](https://www.thingiverse.com/thing:4934734)  

@@ -12,8 +12,6 @@
 #include <Arduino.h>
 #include "mc_servo.h"
 
-#define MC_SERVO_MCPWM_DUTY_MODE MCPWM_DUTY_MODE_0
-
 esp_err_t mc_servo_init(mc_servo_dev_t *dev, uint8_t pin, uint16_t min_pulse_duration, uint16_t max_pulse_duration, uint16_t max_angle, mc_servo_output_t output, uint8_t init_angle)
 {
     mc_servo_config_t config = {
@@ -39,7 +37,7 @@ esp_err_t mc_servo_advanced_init(mc_servo_dev_t *dev, mc_servo_config_t *config)
         .frequency = 50, // frequency = 50Hz = 20ms
         .cmpr_a = 0,     // duty cycle of PWMxA = 0
         .cmpr_b = 0,     // duty cycle of PWMxB = 0
-        .duty_mode = MC_SERVO_MCPWM_DUTY_MODE,
+        .duty_mode = MCPWM_DUTY_MODE_0,
         .counter_mode = MCPWM_UP_COUNTER};
 
     ESP_ERROR_CHECK(mcpwm_init(config->mcpwm_unit_num, config->mcpwm_timer_num, &pwm_config_servo));
@@ -55,6 +53,7 @@ esp_err_t mc_servo_advanced_init(mc_servo_dev_t *dev, mc_servo_config_t *config)
     dev->_target_pos = config->init_angle;
 
     mc_servo_set_angle(dev, config->init_angle);
+    delay(50); // Give servo time to turn!
 
     return ESP_OK;
 }
@@ -71,7 +70,6 @@ esp_err_t mc_servo_set_angle(mc_servo_dev_t *dev, uint8_t angle)
         return ESP_ERR_INVALID_ARG;
     }
     ESP_ERROR_CHECK(mcpwm_set_duty_in_us(dev->mcpwm_unit_num, dev->mcpwm_timer_num, dev->mcpwm_op_num, convert_servo_angle_to_duty_us(dev, angle)));
-    // ESP_ERROR_CHECK(mcpwm_set_duty_type(dev->mcpwm_unit_num, dev->mcpwm_timer_num, dev->mcpwm_op_num, MC_SERVO_MCPWM_DUTY_MODE));
     return ESP_OK;
 }
 

@@ -46,6 +46,8 @@ esp_err_t mc_motor_advanced_init(mc_motor_dev_t *dev, mc_motor_config_t *config)
     dev->mcpwm_unit_num = config->mcpwm_unit_num;
     dev->mcpwm_timer_num = config->mcpwm_timer_num;
 
+    mcpwm_deadtime_enable(config->mcpwm_unit_num, config->mcpwm_timer_num, MCPWM_ACTIVE_HIGH_MODE, 5, 5); // 500ns deadtime
+    
     return ESP_OK;
 }
 

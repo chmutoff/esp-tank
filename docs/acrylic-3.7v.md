@@ -18,5 +18,5 @@
 TODO: add schematic
 
 ## Assembly
-To attach a servo use standard servo pan/tilt mount with this [3D printed clip](https://www.thingiverse.com/thing:4934734)
+To attach a servo use standard servo pan/tilt mount with this [3D printed clip](https://www.thingiverse.com/thing:4934734)  
 TODO: add assembly instructions with pictures

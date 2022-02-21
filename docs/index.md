@@ -7,8 +7,7 @@ The ESP TANK project is designed to be used with any custom combination of chass
 - Compile and upload the firmware
 
 ### Chassis
-- Mini TP100 chassis (W: 15cm, H: 6cm, L: 20cm) and 33GB-520 motors, 6-12V, 170-350rpm.
-![img](img/tp100-tank-chassis.png)
+
 - Acrylic car kit (W: 15cm, H: 6cm, L: 25cm) and TT gear motors, 3-6V, 90-200rpm.
 ![img](img/car-chassis.png)
 

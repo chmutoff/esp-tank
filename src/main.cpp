@@ -53,17 +53,18 @@ void init_camera()
     config.pin_reset = RESET_GPIO_NUM;
     config.xclk_freq_hz = 20000000;
     config.pixel_format = PIXFORMAT_JPEG;
-    config.frame_size = FRAMESIZE_QVGA;
 
     // if PSRAM IC present, init with UXGA resolution and higher JPEG quality
     //                      for larger pre-allocated frame buffer.
     if (psramFound())
     {
+        config.frame_size = FRAMESIZE_UXGA;
         config.jpeg_quality = 10;
         config.fb_count = 2;
     }
     else
     {
+        config.frame_size = FRAMESIZE_SVGA;
         config.jpeg_quality = 12;
         config.fb_count = 1;
     }
@@ -88,6 +89,8 @@ void init_camera()
         s->set_brightness(s, 1);  // up the brightness just a bit
         s->set_saturation(s, -2); // lower the saturation
     }
+
+    s->set_framesize(s, FRAMESIZE_QVGA);
 
 #if (CAMERA_MODEL == M5STACK_WIDE || CAMERA_MODEL == M5STACK_ESP32CAM)
     s->set_vflip(s, 1);

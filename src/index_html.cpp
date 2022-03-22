@@ -31,8 +31,6 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
             height: auto;
         }
         #main {
-            width: 320px;
-            height: 300px;
             margin: auto;
         }
         #joy1-container {
@@ -42,6 +40,10 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
         }
         #joystick1 {
             border: 2px solid #eaeaea;
+        }
+        #slider-container {
+            width: 320px;
+            margin: auto;
         }
         .slider {
             display: inline-block;

@@ -115,18 +115,20 @@ void init_ota()
 
     ArduinoOTA.onStart([]()
                        {
-                           String type;
-                           if (ArduinoOTA.getCommand() == U_FLASH)
-                           {
-                               type = "sketch";
-                           }
-                           else
-                           { // U_SPIFFS
-                               type = "filesystem";
-                           }
+                            String type;
+                            if (ArduinoOTA.getCommand() == U_FLASH)
+                            {
+                                type = "sketch";
+                            }
+                            else
+                            { // U_SPIFFS
+                                type = "filesystem";
+                            }
 
-                           // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
-                           log_i("Start updating %s", type); });
+                            esp_camera_deinit();
+
+                            // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
+                            log_i("Start updating %s", type); });
 
     ArduinoOTA.onEnd([]()
                      { log_i("OTA end"); });

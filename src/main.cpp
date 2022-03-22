@@ -64,6 +64,7 @@ void init_camera()
     }
     else
     {
+        log_w("NO PSRAM found");
         config.frame_size = FRAMESIZE_SVGA;
         config.jpeg_quality = 12;
         config.fb_count = 1;

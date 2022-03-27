@@ -16,10 +16,10 @@ const char *wifi_pass = "MyWifiNetworkPassword";
 const char *wifi_pass = TO_STRING(WIFI_PASS);
 #endif
 
-#ifndef HOST_NAME
+#ifndef MDNS_HOST_NAME
 const char *host_name = "esp-tank";
 #else
-const char *host_name = TO_STRING(HOST_NAME);
+const char *host_name = TO_STRING(MDNS_HOST_NAME);
 #endif
 
 #ifndef FLASH_LED_PIN

@@ -22,6 +22,12 @@ const char *host_name = "esp-tank";
 const char *host_name = TO_STRING(MDNS_HOST_NAME);
 #endif
 
+#ifndef OTA_PASSWORD
+const char *ota_password = "";
+#else
+const char *ota_password = TO_STRING(OTA_PASSWORD);
+#endif
+
 #ifndef FLASH_LED_PIN
 #define FLASH_LED_PIN 4
 #endif

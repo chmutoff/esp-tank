@@ -210,19 +210,19 @@ static esp_err_t aux_handler(httpd_req_t *req)
             if (httpd_query_key_value(buf, "led", val_buf, sizeof(val_buf)) == ESP_OK)
             {
                 int led = atoi(val_buf);
-                log_v("Received led: %d", led);
+                log_d("Received led: %d", led);
                 flash_led_set_brightness(led);
             }
             else if (httpd_query_key_value(buf, "x", val_buf, sizeof(val_buf)) == ESP_OK)
             {
                 int angle_h = atoi(val_buf);
-                log_v("Servo horizontal: %d", angle_h);
+                log_d("Servo horizontal: %d", angle_h);
                 mc_servo_set_target(&servo_h, angle_h);
             }
             else if (httpd_query_key_value(buf, "y", val_buf, sizeof(val_buf)) == ESP_OK)
             {
                 int angle_v = atoi(val_buf);
-                log_v("Servo vertical: %d", angle_v);
+                log_d("Servo vertical: %d", angle_v);
                 mc_servo_set_target(&servo_v, angle_v);
             }
             else if (httpd_query_key_value(buf, "framesize", val_buf, sizeof(val_buf)) == ESP_OK)

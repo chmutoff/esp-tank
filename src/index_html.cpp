@@ -86,7 +86,7 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
         <div class="framesize-container">
             <label for="framesize">Res</label>
             <select id="framesize"
-                onchange="aux('framesize', this.value);">
+                onchange="aux('framesize', this.value); setTimeout(() => rotateImg(document.getElementById('rotation').value), 500);">
                 <option value="13">UXGA (1600x1200)</option>
                 <option value="12">SXGA (1280x1024)</option>
                 <option value="11">HD (1280x720)</option>

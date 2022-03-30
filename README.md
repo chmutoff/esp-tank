@@ -6,6 +6,7 @@ Some of the advantages:
 - The chassis is controlled with a virtual joystick 
 - It is possible to set the onboard flash led brightness
 - Smooth camera control (up/down and left/right)
+- There is an option to change camera resolution and image orientation
 
 ## Assembly
 Connect the motor controller and two servos

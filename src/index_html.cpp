@@ -58,7 +58,7 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
             padding: 5px;
             width: 15%;
         }
-        .stream-container {
+        #stream-container {
             position: relative;
             width: max-content;
             margin: auto;
@@ -83,7 +83,7 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
 
 <body>
     <div id="main">
-        <div class="framesize-container">
+        <div id="framesize-container">
             <label for="framesize">Res</label>
             <select id="framesize"
                 onchange="aux('framesize', this.value); setTimeout(() => rotateImg(document.getElementById('rotation').value), 500);">
@@ -109,7 +109,7 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
                 <option value="90">90&deg;</option>
             </select>
         </div>
-        <div class="stream-container">
+        <div id="stream-container">
             <img src="" id="image">
             <div id="stop-stream" onclick="stopStream(event);">&#xD7;</div>
             <div id="start-stream" onclick="startStream(event);" style="display: none;">&#x298A;</div>
@@ -119,19 +119,19 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
             <div>
                 <span>F: </span>
                 <input class="slider" type="range" min="0" max="100" value="0"
-                    oninput="this.parentNode.querySelector('.tooltiptext').innerHTML = this.value + '%'; aux('led', this.value);">
+                    oninput="this.nextElementSibling.innerHTML = this.value + '%'; aux('led', this.value);">
                 <span class="tooltiptext">0%</span>
             </div>
             <div>
                 <span>H: </span>
                 <input class="slider" type="range" min="0" max="180" value="90"
-                    oninput="this.parentNode.querySelector('.tooltiptext').innerHTML = this.value + '&#176;'; aux('x', this.value);">
+                    oninput="this.nextElementSibling.innerHTML = this.value + '&#176;'; aux('x', this.value);">
                 <span class="tooltiptext">90&#176;</span>
             </div>
             <div>
                 <span>V: </span>
                 <input class="slider" type="range" min="0" max="180" value="90"
-                    oninput="this.parentNode.querySelector('.tooltiptext').innerHTML = this.value + '&#176;'; aux('y', this.value);">
+                    oninput="this.nextElementSibling.innerHTML = this.value + '&#176;'; aux('y', this.value);">
                 <span class="tooltiptext">90&#176;</span>
             </div>
         </div>

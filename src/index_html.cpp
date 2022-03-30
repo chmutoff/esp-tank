@@ -27,7 +27,6 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
         }
         img {
             width: auto;
-            max-width: 100%;
             height: auto;
         }
         #main {
@@ -59,14 +58,35 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
             padding: 5px;
             width: 15%;
         }
+        .stream-container {
+            position: relative;
+            width: max-content;
+            margin: auto;
+        }
+        #stop-stream,
+        #start-stream {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            z-index: 99;
+            background: #ff3333;
+            width: 16px;
+            height: 16px;
+            border-radius: 100px;
+            color: #fff;
+            text-align: center;
+            line-height: 18px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
     <div id="main">
-        <div class="framesize-container">  
-            <label for="framesize">Resolution</label>
-            <select id="framesize" onchange="try{fetch(document.location.origin+'/aux?framesize='+this.value);}catch(e){}">
+        <div class="framesize-container">
+            <label for="framesize">Res</label>
+            <select id="framesize"
+                onchange="aux('framesize', this.value);">
                 <option value="13">UXGA (1600x1200)</option>
                 <option value="12">SXGA (1280x1024)</option>
                 <option value="11">HD (1280x720)</option>
@@ -82,32 +102,36 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
                 <option value="1">QQVGA (160x120)</option>
                 <option value="0">96x96 (96x96)</option>
             </select>
+            <label for="rotation">Rot</label>
+            <select id="rotation" onchange="rotateImg(this.value);">
+                <option value="270">-90&deg;</option>
+                <option value="0" selected>0&deg;</option>
+                <option value="90">90&deg;</option>
+            </select>
         </div>
-        <img src="" id="photo">
+        <div class="stream-container">
+            <img src="" id="image">
+            <div id="stop-stream" onclick="stopStream(event);">&#xD7;</div>
+            <div id="start-stream" onclick="startStream(event);" style="display: none;">&#x298A;</div>
+        </div>
         <div id="joy1-container"></div>
-        <div id="joy1-info-container">
-            <label for="joy1X">X1</label>
-            <input id="joy1X" type="text" disabled /></br>
-            <label for="joy1Y">Y1</label>
-            <input id="joy1Y" type="text" disabled />
-        </div>
         <div id="slider-container">
             <div>
                 <span>F: </span>
                 <input class="slider" type="range" min="0" max="100" value="0"
-                    oninput="this.parentNode.querySelector('.tooltiptext').innerHTML = this.value + '%'; try{fetch(document.location.origin+'/aux?led='+this.value);}catch(e){}">
+                    oninput="this.parentNode.querySelector('.tooltiptext').innerHTML = this.value + '%'; aux('led', this.value);">
                 <span class="tooltiptext">0%</span>
             </div>
             <div>
                 <span>H: </span>
                 <input class="slider" type="range" min="0" max="180" value="90"
-                    oninput="this.parentNode.querySelector('.tooltiptext').innerHTML = this.value + '&#176;'; try{fetch(document.location.origin+'/aux?x='+this.value);}catch(e){}">
+                    oninput="this.parentNode.querySelector('.tooltiptext').innerHTML = this.value + '&#176;'; aux('x', this.value);">
                 <span class="tooltiptext">90&#176;</span>
             </div>
             <div>
                 <span>V: </span>
                 <input class="slider" type="range" min="0" max="180" value="90"
-                    oninput="this.parentNode.querySelector('.tooltiptext').innerHTML = this.value + '&#176;'; try{fetch(document.location.origin+'/aux?y='+this.value);}catch(e){}">
+                    oninput="this.parentNode.querySelector('.tooltiptext').innerHTML = this.value + '&#176;'; aux('y', this.value);">
                 <span class="tooltiptext">90&#176;</span>
             </div>
         </div>
@@ -121,16 +145,52 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
         setInterval(function () {
             var joy1xVal = Joy1.GetX();
             var joy1yVal = Joy1.GetY();
-            joy1X.value = joy1xVal;
-            joy1Y.value = joy1yVal;
-
             var xhr = new XMLHttpRequest();
             xhr.open("GET", "/control?x=" + joy1xVal + "&y=" + joy1yVal, true);
             xhr.send();
-
         }, 100);
 
-        window.onload = document.getElementById("photo").src = window.location.href.slice(0, -1) + ":81/stream";
+        var image = document.getElementById("image");
+        window.onload = image.src = window.location.origin + ":81/stream";
+
+        function rotateImg(deg) {
+            if (deg == 0) {
+                image.style.transform = '';
+                image.parentElement.style.height = '';
+                image.parentElement.style.width = '';
+                return;
+            } else if (deg == 90) {
+                image.style.transform = 'rotate(90deg) translateY(-100%)';
+            } else if (deg == 270) {
+                image.style.transform = 'rotate(270deg) translateX(-100%)';
+            } else {
+                console.error("Wrong degree!");
+                return;
+            }
+            image.style.transformOrigin = 'top left';
+            image.parentElement.style.height = image.width + 'px';
+            image.parentElement.style.width = image.height + 'px';
+        }
+
+        function aux(fn, val) {
+            try {
+                fetch('/aux?' + fn + '=' + val);
+            } catch (e) {
+                console.error(e.message);
+            }
+        }
+
+        function stopStream(event) {
+            event.target.style.display = 'none';
+            event.target.nextElementSibling.style.display = '';
+            window.stop();
+        }
+
+        function startStream(e) {
+            event.target.style.display = 'none';
+            event.target.previousElementSibling.style.display = '';
+            image.src = window.location.origin + ":81/stream";
+        }
     </script>
 </body>
 </html>)";

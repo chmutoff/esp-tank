@@ -145,27 +145,19 @@ static esp_err_t cmd_handler(httpd_req_t *req)
             httpd_resp_send_500(req);
             return ESP_FAIL;
         }
-        if (httpd_req_get_url_query_str(req, buf, buf_len) == ESP_OK)
+        if (httpd_req_get_url_query_str(req, buf, buf_len) == ESP_OK &&
+            httpd_query_key_value(buf, "x", r_x, sizeof(r_x)) == ESP_OK &&
+            httpd_query_key_value(buf, "y", r_y, sizeof(r_y)) == ESP_OK)
         {
-            if (httpd_query_key_value(buf, "x", r_x, sizeof(r_x)) == ESP_OK &&
-                httpd_query_key_value(buf, "y", r_y, sizeof(r_y)) == ESP_OK)
-            {
-                last_control_request = esp_timer_get_time();
+            last_control_request = esp_timer_get_time();
 
-                int x = atoi(r_x);
-                int y = atoi(r_y);
+            int x = atoi(r_x);
+            int y = atoi(r_y);
 
-                mc_motor_set_speed(&motor_l, y + x);
-                mc_motor_set_speed(&motor_r, y - x);
+            mc_motor_set_speed(&motor_l, y + x);
+            mc_motor_set_speed(&motor_r, y - x);
 
-                // Serial.printf("Received x: %d, y: %d, l: %d, r: %d\n", x, y, y + x, y - x);
-            }
-            else
-            {
-                free(buf);
-                httpd_resp_send_404(req);
-                return ESP_FAIL;
-            }
+            // Serial.printf("Received x: %d, y: %d, l: %d, r: %d\n", x, y, y + x, y - x);
         }
         else
         {

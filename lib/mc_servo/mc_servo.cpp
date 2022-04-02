@@ -78,6 +78,11 @@ void mc_servo_set_target(mc_servo_dev_t *dev, uint8_t angle)
     dev->_target_pos = angle;
 }
 
+uint8_t mc_servo_get_target(mc_servo_dev_t *dev)
+{
+    return dev->_target_pos;
+}
+
 bool mc_servo_move_to_target(mc_servo_dev_t *dev)
 {
     int err = abs(dev->_target_pos - dev->_current_pos);

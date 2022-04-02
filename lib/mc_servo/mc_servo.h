@@ -98,6 +98,14 @@ esp_err_t mc_servo_set_angle(mc_servo_dev_t *dev, uint8_t angle);
 void mc_servo_set_target(mc_servo_dev_t *dev, uint8_t angle);
 
 /**
+ * @brief Get servo target angle (the final angle that the servo should have)
+ * 
+ * @param[in] dev 
+ * @return uint8_t Servo target angle 
+ */
+uint8_t mc_servo_get_target(mc_servo_dev_t *dev);
+
+/**
  * @brief Smoothly moves the servo to the desired angle.
  * Call mc_servo_move_to_target in the loop() every 20ms to smoothly move to target angle.
  *

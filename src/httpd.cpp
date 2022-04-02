@@ -35,6 +35,9 @@ extern mc_servo_dev_t servo_v;
 extern mc_motor_dev_t motor_l;
 extern mc_motor_dev_t motor_r;
 
+static int flash_brightness = 0;
+static uint16_t rotation = 0;
+
 /**
  * @brief Renders the main HTML page
  *
@@ -203,6 +206,7 @@ static esp_err_t aux_handler(httpd_req_t *req)
             {
                 int led = atoi(val_buf);
                 log_d("Received led: %d", led);
+                flash_brightness = led;
                 flash_led_set_brightness(led);
             }
             else if (httpd_query_key_value(buf, "x", val_buf, sizeof(val_buf)) == ESP_OK)
@@ -222,6 +226,11 @@ static esp_err_t aux_handler(httpd_req_t *req)
                 int val = atoi(val_buf);
                 sensor_t *s = esp_camera_sensor_get();
                 s->set_framesize(s, (framesize_t)val);
+            }
+            else if (httpd_query_key_value(buf, "rotation", val_buf, sizeof(val_buf)) == ESP_OK)
+            {
+                int val = atoi(val_buf);
+                rotation = val;
             }
             else
             {
@@ -246,6 +255,27 @@ static esp_err_t aux_handler(httpd_req_t *req)
 
     httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
     return httpd_resp_send(req, NULL, 0);
+}
+
+static esp_err_t status_handler(httpd_req_t *req)
+{
+    static char json_response[1024];
+
+    sensor_t *s = esp_camera_sensor_get();
+    char *p = json_response;
+    *p++ = '{';
+
+    p += sprintf(p, "\"framesize\":%u,", s->status.framesize);
+    p += sprintf(p, "\"rotation\":%u,", rotation);
+    p += sprintf(p, "\"flash\":%d,", flash_brightness);
+    p += sprintf(p, "\"horizontal\":%d,", mc_servo_get_target(&servo_h));
+    p += sprintf(p, "\"vertical\":%d", mc_servo_get_target(&servo_v));
+
+    *p++ = '}';
+    *p++ = 0;
+    httpd_resp_set_type(req, "application/json");
+    httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+    return httpd_resp_send(req, json_response, strlen(json_response));
 }
 
 /**
@@ -280,6 +310,12 @@ void start_web_server()
         .handler = aux_handler,
         .user_ctx = NULL};
 
+    httpd_uri_t status_uri = {
+        .uri = "/status",
+        .method = HTTP_GET,
+        .handler = status_handler,
+        .user_ctx = NULL};
+
     httpd_uri_t stream_uri = {
         .uri = "/stream",
         .method = HTTP_GET,
@@ -293,6 +329,7 @@ void start_web_server()
         httpd_register_uri_handler(control_httpd, &js_uri);
         httpd_register_uri_handler(control_httpd, &cmd_uri);
         httpd_register_uri_handler(control_httpd, &aux_uri);
+        httpd_register_uri_handler(control_httpd, &status_uri);
     }
 
     config.server_port += 1;

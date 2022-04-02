@@ -118,21 +118,24 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
         <div id="slider-container">
             <div>
                 <span>F: </span>
-                <input class="slider" type="range" min="0" max="100" value="0"
-                    oninput="this.nextElementSibling.innerHTML = this.value + '%'; aux('led', this.value);">
-                <span class="tooltiptext">0%</span>
+                <input class="slider" id="flash" type="range" min="0" max="100" value="0"
+                    onchange="this.nextElementSibling.innerHTML = this.value + '%'; aux('led', this.value);">
+                <span class="tooltiptext" id="flash-tooltip"
+                    onclick="aux('led', 0); this.previousElementSibling.value = 0; this.innerHTML = '0%';">0%</span>
             </div>
             <div>
                 <span>H: </span>
-                <input class="slider" type="range" min="0" max="180" value="90"
-                    oninput="this.nextElementSibling.innerHTML = this.value + '&#176;'; aux('x', this.value);">
-                <span class="tooltiptext">90&#176;</span>
+                <input class="slider" id="horizontal" type="range" min="0" max="180" value="90"
+                    onchange="this.nextElementSibling.innerHTML = this.value + '&#176;'; aux('x', this.value);">
+                <span class="tooltiptext" id="horizontal-tooltip"
+                    onclick="aux('x', 90); this.previousElementSibling.value = 90; this.innerHTML = '90&#176;';">90&#176;</span>
             </div>
             <div>
                 <span>V: </span>
-                <input class="slider" type="range" min="0" max="180" value="90"
-                    oninput="this.nextElementSibling.innerHTML = this.value + '&#176;'; aux('y', this.value);">
-                <span class="tooltiptext">90&#176;</span>
+                <input class="slider" id="vertical" type="range" min="0" max="180" value="90"
+                    onchange="this.nextElementSibling.innerHTML = this.value + '&#176;'; aux('y', this.value);">
+                <span class="tooltiptext" id="vertical-tooltip"
+                    onclick="aux('y', 90); this.previousElementSibling.value = 90; this.innerHTML = '90&#176;';">90&#176;</span>
             </div>
         </div>
     </div>
@@ -141,7 +144,6 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
         var Joy1 = new JoyStick('joy1-container', { "title": "joystick1", "autoReturnToCenter": true, internalFillColor: "darkred", internalStrokeColor: "black", externalStrokeColor: "darkred" });
         var joy1X = document.getElementById("joy1X");
         var joy1Y = document.getElementById("joy1Y");
-
         setInterval(function () {
             var joy1xVal = Joy1.GetX();
             var joy1yVal = Joy1.GetY();
@@ -149,9 +151,27 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
             xhr.open("GET", "/control?x=" + joy1xVal + "&y=" + joy1yVal, true);
             xhr.send();
         }, 100);
-
         var image = document.getElementById("image");
         window.onload = image.src = window.location.origin + ":81/stream";
+
+        fetch('/status')
+            .then(function (response) {
+                return response.json()
+            })
+            .then(function (state) {
+                Object.entries(state).forEach(([key, value]) => {
+                    document.getElementById(key).value = value
+                    if (key == 'rotation') {
+                        rotateImg(value);
+                    } else if (key == 'flash') {
+                        document.getElementById('flash-tooltip').innerHTML = value + '%';;
+                    } else if (key == 'horizontal') {
+                        document.getElementById('horizontal-tooltip').innerHTML = value + '&#176;';
+                    } else if (key == 'vertical') {
+                        document.getElementById('vertical-tooltip').innerHTML = value + '&#176;';
+                    }
+                });
+            })
 
         function rotateImg(deg) {
             if (deg == 0) {
@@ -170,6 +190,7 @@ static const char INDEX_HTML[] PROGMEM = R"(<!DOCTYPE html>
             image.style.transformOrigin = 'top left';
             image.parentElement.style.height = image.width + 'px';
             image.parentElement.style.width = image.height + 'px';
+            aux('rotation', deg);
         }
 
         function aux(fn, val) {

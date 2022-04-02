@@ -83,10 +83,23 @@ void init_camera()
     }
 
     sensor_t *s = esp_camera_sensor_get();
+
+#ifdef CAM_VFLIP
+    s->set_vflip(s, 1);
+#endif
+
+#ifdef CAM_HMIRROR
+    s->set_hmirror(s, 1);
+#endif
+
     // initial sensors are flipped vertically and colors are a bit saturated
     if (s->id.PID == OV3660_PID)
     {
-        s->set_vflip(s, 1);       // flip it back
+#ifdef CAM_VFLIP
+        s->set_vflip(s, 0);
+#else
+        s->set_vflip(s, 1); // flip it back
+#endif
         s->set_brightness(s, 1);  // up the brightness just a bit
         s->set_saturation(s, -2); // lower the saturation
     }
@@ -94,8 +107,17 @@ void init_camera()
     s->set_framesize(s, FRAMESIZE_QVGA);
 
 #if (CAMERA_MODEL == M5STACK_WIDE || CAMERA_MODEL == M5STACK_ESP32CAM)
+#ifdef CAM_VFLIP
+    s->set_vflip(s, 0);
+#else
     s->set_vflip(s, 1);
+#endif
+#ifdef CAM_HMIRROR
+    s->set_hmirror(s, 0);
+#else
     s->set_hmirror(s, 1);
+
+#endif
 #endif
 }
 
